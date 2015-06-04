@@ -192,7 +192,7 @@
                             content: "%s: %p.0%" 
                           }
                         }
-                      ' style="height:168px"></div>
+                      ' style="height:300px"></div>
                   </div>
                   <div class="m-t-xs">
                     <div class="font-bold"><?php echo $total_ventas; ?></div>
