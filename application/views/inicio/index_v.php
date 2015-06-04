@@ -147,6 +147,58 @@
             <div class="box-cell">
               <div class="box-inner padding">
                 <?php echo $rol; ?>
+                <br>
+                <?php echo $ventas; ?>
+                <div class="panel panel-card p m-b-sm">
+                  <h5 class="no-margin m-b">Ventas</h5>
+                  <div class="text-center" ng-controller="ChartCtrl">
+                      <div ui-jp="plot" ui-options='
+                        <?php echo $ventas; ?>,
+                        {
+                          series: 
+                          { 
+                            pie: 
+                            { 
+                              show: true, 
+                              innerRadius: 0.4, 
+                              stroke: 
+                              { 
+                                width: 2 
+                              }, 
+                              label: 
+                              { 
+                                show: true, 
+                                threshold: 0.05 
+                              } 
+                            } 
+                          },
+                          colors: 
+                          [
+                            "#2196f3",
+                            "#ffc107",
+                            "#4caf50",
+                            "#7e57c2"
+                          ],
+                          grid: 
+                          { 
+                            hoverable: true, 
+                            clickable: true, 
+                            borderWidth: 0, 
+                            color: "#ccc" 
+                          },   
+                          tooltip: true,
+                          tooltipOpts: 
+                          { 
+                            content: "%s: %p.0%" 
+                          }
+                        }
+                      ' style="height:168px"></div>
+                  </div>
+                  <div class="m-t-xs">
+                    <div class="font-bold"><?php echo $total_ventas; ?></div>
+                    <!-- <small class="text-muted">This month</small> -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>
