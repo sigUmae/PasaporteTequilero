@@ -16,6 +16,7 @@ class Inicio extends CI_Controller {
 			$data['avatar'] = $data['avatar'][0]->avatar;
 			$data['header'] = $this->get_header();
 			$data['menu_1'] = $this->Master_m->filas_condicion('menu_1',array('id_rol' => $data['rol'][0]->id_rol));
+			$data['id_rol'] = $data['rol'][0]->id;
 			$data['rol'] = $data['rol'][0]->roles;
 			$data['id_usuario'] = md5($this->session->userdata('id_usuario'));
 			foreach ($data['menu_1'] as $menu_1) {
@@ -32,7 +33,7 @@ class Inicio extends CI_Controller {
 					$data['menu_3'][] = $value;	
 				}
 			}
-			// echo '<pre>';
+
 			$total_vendidos = $this->Inicio_m->count_pasaportes(array('status' => '1'));
 			$vendidos = $this->Inicio_m->count_by_vendedor('hacienda');
 			$vendidos_a = $this->Inicio_m->count_by_vendedor('aliado');
@@ -42,21 +43,29 @@ class Inicio extends CI_Controller {
 			foreach ($vendidos as $key => $value) {
 				$vendidos[$key]->data = $this->porcentaje_vendidos((int)$total_vendidos[0]->pasaportes,(int)$value->data);
 			}
-			// print_r(json_encode($vendidos)); exit();
-			// for ($i=0; $i < 5; $i++) { 
-			// 	$container[] = array(
-			// 		'label'=>'test'.$i,
-			// 		'data'=>''
-			// 	);		
-			// }
-			// echo '<pre>';
-			// print_r($container); exit();
-			// $obj = new stdClass();
-			// $obj->titulo = 'titulo';
-			// $obj->main = 'main';
-			// $test = array($obj); 
-			$data['ventas'] = json_encode($vendidos);
+
+			// $obj = new stdClass(); 
+			
 			$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
+			switch ($data['id_rol']) {
+				case '1':
+					$data['color_1'] = 'c-admin';
+					$data['color_2'] = 'c-admin-50';
+					break;
+				case '2':
+					$data['color_1'] = 'c-hacienda';
+					$data['color_2'] = 'c-hacienda-50';
+					break;
+				case '3':
+					$data['color_1'] = 'c-aliado';
+					$data['color_2'] = 'c-aliado-50';
+					break;
+				default:
+					$data['color_1'] = 'blue';
+					$data['color_2'] = 'blue-50';
+					break;
+			}
+			$data['ventas'] = json_encode($vendidos);
 			$this->load->view('inicio/index_v',$data);
 		
 		} 

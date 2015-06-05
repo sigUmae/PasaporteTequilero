@@ -6186,7 +6186,7 @@ a.text-dark:hover {
 }
 
 .logo-blanco {
-  background-image: url('/pasaporte/logo-min.png');
+  background-image: url('/pasaportetequilero/logo-min.png');
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
@@ -6223,15 +6223,33 @@ div.min-height {
 td.middle {
   vertical-align: middle !important;
 }
-
 /*td.center {
   
 }*/
-
 .m-t-n {
   margin-top: 6px;
 }
-
 .no-display-tarjeta {
   display: none;
+}
+.c-admin {
+  background-color: #3F51B5;
+}
+.c-admin-50 {
+  background-color: #E8EAF6;
+}
+.c-hacienda {
+  background-color: #03A9F4;
+}
+.c-hacienda-50 {
+  background-color: #E1F5FE;
+}
+.c-aliado {
+  background-color: #FB8C00;
+}
+.c-aliado-50 {
+  background-color: #FFF3E0;
+}
+.c-admin, .c-hacienda, .c-aliado {
+  color: white;
 }

@@ -4,7 +4,7 @@
   <aside id="aside" class="app-aside modal fade " role="menu">
     <div class="left">
       <div class="box bg-white">
-  <div class="navbar md-whiteframe-z1 no-radius blue">
+  <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
       <!-- brand -->
       <a class="navbar-brand logo-blanco" href="<?php echo base_url('inicio/index')?>"></a>
       <!-- / brand -->
@@ -12,7 +12,8 @@
   <div class="box-row">
     <div class="box-cell scrollable hover">
       <div class="box-inner">
-        <div class="p hidden-folded blue-50" style="background-image:url(images/bg.png); background-size:cover">
+        <div class="p hidden-folded <?php echo $color_2; ?>" 
+             style="background-image:url(<?php echo base_url('assets/images/bg.png'); ?>); background-size:cover">
           <div class="rounded w-64 bg-white inline pos-rlt">
             <img src="<?php echo base_url('assets/images')."/".$avatar?>" class="img-responsive rounded">
           </div>
@@ -22,12 +23,18 @@
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
             </span>
-            pasaportetequilero1@gmail.com
+            <small>pasaportetequilero1@gmail.com</small>
           </a>
         </div>
         <div id="nav">
           <nav ui-nav>
   <ul class="nav">
+    <li>
+                          <a md-ink-ripple href="<?php echo base_url('inicio/index'); ?>">
+                            <i class="icon mdi-content-sort i-20"></i>
+                            Inicio
+                          </a>
+                        </li>
   <?php foreach ($menu_1 as $menu_1v) { ?>
       <li>
       <?php if ($menu_1v->c_menu != 0) {  ?>
@@ -124,7 +131,7 @@
   <div id="content" class="app-content" role="main">
     <div class="box">
       <!-- Content Navbar -->
-      <div class="navbar md-whiteframe-z1 no-radius blue">
+      <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
         <!-- Open side - Naviation on mobile -->
         <a md-ink-ripple  data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
         <!-- / -->

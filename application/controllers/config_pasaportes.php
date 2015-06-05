@@ -863,7 +863,8 @@ class Config_pasaportes extends CI_Controller {
 			$data['avatar'] = $data['avatar'][0]->avatar;
 			$data['header'] = $this->get_header();
 			$data['menu_1'] = $this->Master_m->filas_condicion('menu_1',array('id_rol' => $data['rol'][0]->id_rol));
-			$data['rol'] = $data['rol'][0]->roles;
+			$data['id_rol'] = $data['rol'][0]->id;
+            $data['rol'] = $data['rol'][0]->roles;
 			$data['id_usuario'] = md5($this->session->userdata('id_usuario'));
 			foreach ($data['menu_1'] as $menu_1) {
 				$response = $this->Master_m->filas_condicion('menu_2',array('id_menu1' => $menu_1->id));
@@ -879,6 +880,24 @@ class Config_pasaportes extends CI_Controller {
 					$data['menu_3'][] = $value;	
 				}
 			}
+            switch ($data['id_rol']) {
+                case '1':
+                    $data['color_1'] = 'c-admin';
+                    $data['color_2'] = 'c-admin-50';
+                    break;
+                case '2':
+                    $data['color_1'] = 'c-hacienda';
+                    $data['color_2'] = 'c-hacienda-50';
+                    break;
+                case '3':
+                    $data['color_1'] = 'c-aliado';
+                    $data['color_2'] = 'c-aliado-50';
+                    break;
+                default:
+                    $data['color_1'] = 'blue';
+                    $data['color_2'] = 'blue-50';
+                    break;
+            }
 			return $data;
 		
 		} 
