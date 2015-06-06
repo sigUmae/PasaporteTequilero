@@ -19,6 +19,52 @@ class Inicio extends CI_Controller {
 			$data['id_rol'] = $data['rol'][0]->id;
 			$data['rol'] = $data['rol'][0]->roles;
 			$data['id_usuario'] = md5($this->session->userdata('id_usuario'));
+			switch ($data['id_rol']) {
+				case '1':
+					$data['color_1'] = 'c-admin';
+					$data['color_2'] = 'c-admin-50';
+					$data['admin'] = '1';
+					$total_vendidos = $this->Inicio_m->count_pasaportes(array('status' => '1','tipo_pago' => 'Pagado'),'= CURDATE()');
+					// $total_vendidos[0]->pasaportes = '0';
+					if ($total_vendidos[0]->pasaportes == '0') {
+						$obj = new stdClass();
+						$obj->label = 'Vendedor';
+						$obj->data = '0';
+						$vendidos = array($obj);
+					} 
+					else {
+						$vendidos = $this->count($total_vendidos[0]->pasaportes);
+						$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
+					}
+
+					$semena_venta = $this->count_day('info_compra');
+					$semena_visita = $this->count_day('visitas');
+					$semena_kit = $this->count_day('kit','2');
+					// echo '<pre>';
+					// print_r($this->db->last_query()); exit();
+					
+					$data['ventas'] = json_encode($vendidos);
+					$data['ventas_semana'] = json_encode($semena_venta);
+					$data['semena_visita'] = json_encode($semena_visita);
+					$data['semena_kit'] = json_encode($semena_kit);
+					$data['total_vendidos'] = $total_vendidos[0]->pasaportes;
+					break;
+				case '2':
+					$data['admin'] = '0';
+					$data['color_1'] = 'c-hacienda';
+					$data['color_2'] = 'c-hacienda-50';
+					break;
+				case '3':
+					$data['admin'] = '0';
+					$data['color_1'] = 'c-aliado';
+					$data['color_2'] = 'c-aliado-50';
+					break;
+				default:
+					$data['admin'] = '0';
+					$data['color_1'] = 'blue';
+					$data['color_2'] = 'blue-50';
+					break;
+			}
 			foreach ($data['menu_1'] as $menu_1) {
 				$response = $this->Master_m->filas_condicion('menu_2',array('id_menu1' => $menu_1->id));
 				if (!empty($response)) {
@@ -33,45 +79,40 @@ class Inicio extends CI_Controller {
 					$data['menu_3'][] = $value;	
 				}
 			}
-
-			$total_vendidos = $this->Inicio_m->count_pasaportes(array('status' => '1'));
-			$vendidos = $this->Inicio_m->count_by_vendedor('hacienda');
-			$vendidos_a = $this->Inicio_m->count_by_vendedor('aliado');
-			foreach ($vendidos_a as $value) {
-				$vendidos[] = $value;
-			}
-			foreach ($vendidos as $key => $value) {
-				$vendidos[$key]->data = $this->porcentaje_vendidos((int)$total_vendidos[0]->pasaportes,(int)$value->data);
-			}
-
-			// $obj = new stdClass(); 
-			
-			$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
-			switch ($data['id_rol']) {
-				case '1':
-					$data['color_1'] = 'c-admin';
-					$data['color_2'] = 'c-admin-50';
-					break;
-				case '2':
-					$data['color_1'] = 'c-hacienda';
-					$data['color_2'] = 'c-hacienda-50';
-					break;
-				case '3':
-					$data['color_1'] = 'c-aliado';
-					$data['color_2'] = 'c-aliado-50';
-					break;
-				default:
-					$data['color_1'] = 'blue';
-					$data['color_2'] = 'blue-50';
-					break;
-			}
-			$data['ventas'] = json_encode($vendidos);
 			$this->load->view('inicio/index_v',$data);
 		
 		} 
 		else {
 			redirect('login/index');
 		}
+	}
+
+	private function count_day($tabla,$status="1") {
+	
+		$semena = array();
+		for ($i=1; $i <= 7; $i++) {
+			$day = $this->Inicio_m->count_days($i,$tabla,$status);
+			// echo '<pre>';
+			// print_r($this->db->last_query()); exit();
+			$by_day = array($i,(int)$day[0]->pasaportes);
+			$semena[] = $by_day; 
+		}
+		return $semena;
+		
+	}
+
+	private function count($total_vendidos) {
+	
+		$vendidos = $this->Inicio_m->count_by_vendedor('hacienda');
+		$vendidos_a = $this->Inicio_m->count_by_vendedor('aliado');	
+		foreach ($vendidos_a as $value) {
+			$vendidos[] = $value;
+		}
+		foreach ($vendidos as $key => $value) {
+			$vendidos[$key]->data = $this->porcentaje_vendidos((int)$total_vendidos,(int)$value->data);
+		}	
+		return $vendidos;
+
 	}
 
 	private function porcentaje_vendidos($total,$cantidad) {

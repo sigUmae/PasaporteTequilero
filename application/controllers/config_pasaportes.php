@@ -87,7 +87,8 @@ class Config_pasaportes extends CI_Controller {
         if ($id_pasaporte and $ajax_request) {
             $existe = $this->Master_m->filas_condicion('info_compra',array('id_pasaporte' => $id_pasaporte));
             if (!empty($existe)) {
-                $this->Master_m->update('info_compra',array('status_comision' => '2'),array('id_pasaporte' => $id_pasaporte));   
+                $this->Master_m->update('info_compra',array('status_comision' => '2'),array('id_pasaporte' => $id_pasaporte));
+                $this->Master_m->insert('fecha_comision',array('id_pasaporte' => $id_pasaporte)); 
                 echo 'Hecho';
             } 
             else {
@@ -120,7 +121,6 @@ class Config_pasaportes extends CI_Controller {
             if ($existe) {
                 $estado_compra = array('Pagado ' => '1', 'En proceso' => '2');
                 $valid['pasaportes'] = $this->Master_m->filas_condicion('info_compra',array('id_'.$vendedor_[$tipo] => $id_hacienda));
-                // echo '<pre>';
                 foreach ($valid['pasaportes'] as $key => $value) {
                     if ($value->tipo_pago == 'Pagado') {
                         $valid['pasaportes'][$key]->efectivo = '1'; // Efectivo
@@ -130,8 +130,6 @@ class Config_pasaportes extends CI_Controller {
                         $valid['pasaportes'][$key]->efectivo = '2'; // En proceso
                     }
                 }
-                // echo '<pre>';
-                // print_r($valid['pasaportes']); exit();
                 $this->load->view('config_pasaportes/comision_v',$valid);
             }
             else {

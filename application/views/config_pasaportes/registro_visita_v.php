@@ -10,7 +10,7 @@
             <div class="box-row">
               <div class="box-cell scrollable hover">
                 <div class="box-inner">
-                  <div class="p hidden-folded <?php echo $color_1; ?>" 
+                  <div class="p hidden-folded <?php echo $color_2; ?>" 
                        style="background-image:url(<?php echo base_url('assets/images/bg.png'); ?>); background-size:cover">
                     <div class="rounded w-64 bg-white inline pos-rlt">
                       <img src="<?php echo base_url('assets/images')."/".$avatar?>" class="img-responsive rounded">

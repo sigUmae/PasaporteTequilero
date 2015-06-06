@@ -104,19 +104,11 @@
           </div>
         </div>
       </aside>
-      <!-- / aside -->
-      <!-- content -->
       <div id="content" class="app-content" role="main">
         <div class="box">
-          <!-- Content Navbar -->
           <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
-            <!-- Open side - Naviation on mobile -->
             <a md-ink-ripple  data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
-            <!-- / -->
-            <!-- Page title - Bind to $state's title -->
             <div class="navbar-item pull-left h4">Pasaporte tequilero - <?php echo $rol; ?></div>
-            <!-- / -->
-            <!-- Common tools -->
             <ul class="nav navbar-tool pull-right">
               <li class="dropdown">
                 <a md-ink-ripple data-toggle="dropdown">
@@ -132,16 +124,12 @@
               </li>
             </ul>
             <div class="pull-right" ui-view="navbar@"></div>
-            <!-- / -->
-            <!-- Search form -->
             <div id="search" class="pos-abt w-full h-full indigo hide">
               <div class="box">
                 <div class="box-col w-56 text-center">
-                  <!-- hide search form -->
                   <a md-ink-ripple class="navbar-item inline"  ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
                 </div>
                 <div class="box-col v-m">
-                  <!-- bind to app.search.content -->
                   <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
                 </div>
                 <div class="box-col w-56 text-center">
@@ -153,8 +141,9 @@
           <div class="box-row">
             <div class="box-cell">
               <div class="box-inner padding">
+              <?php if ($admin == '1') { ?>
                 <div class="row row-xs">
-                  <div class="col-sm-8">
+                  <div class="col-sm-4">
                     <div class="panel panel-card">
                       <div class="p">
                         Pasaportes vendidos
@@ -162,114 +151,191 @@
                       <div class="panel-body text-center" style="height: 180px;">
                         <div class="m-v-lg">
                           Hoy
-                          <div class="h2 text-success font-bold">3,421,100</div>
+                          <div class="h2 text-success font-bold"><?php echo $total_vendidos; ?></div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="panel panel-card p m-b-sm">
-                  <!-- <h5 class="no-margin m-b">Ventas</h5> -->
-                  <div class="text-center" ng-controller="ChartCtrl">
-                      <div ui-jp="plot" ui-options='
-                        <?php echo $ventas; ?>,
-                        {
-                          series: 
-                          { 
-                            pie: 
-                            { 
-                              show: true, 
-                              innerRadius: 0.4, 
-                              stroke: 
+                      <div class="text-center" ng-controller="ChartCtrl">
+                        <div ui-jp="plot" ui-options='
+                            <?php echo $ventas; ?>,
+                            {
+                              series: 
                               { 
-                                width: 2 
-                              }, 
-                              label: 
+                                pie: 
+                                { 
+                                  show: true, 
+                                  innerRadius: 0.4, 
+                                  stroke: 
+                                  { 
+                                    width: 2 
+                                  }, 
+                                  label: 
+                                  { 
+                                    show: true, 
+                                    threshold: 0.05 
+                                  } 
+                                } 
+                              },
+                              colors: 
+                              [
+                                "#2196f3",
+                                "#ffc107",
+                                "#4caf50",
+                                "#7e57c2"
+                              ],
+                              grid: 
                               { 
-                                show: true, 
-                                threshold: 0.05 
-                              } 
-                            } 
-                          },
-                          colors: 
-                          [
-                            "#2196f3",
-                            "#ffc107",
-                            "#4caf50",
-                            "#7e57c2"
-                          ],
-                          grid: 
-                          { 
-                            hoverable: true, 
-                            clickable: true, 
-                            borderWidth: 0, 
-                            color: "#ccc" 
-                          },   
-                          tooltip: true,
-                          tooltipOpts: 
-                          { 
-                            content: "%s: %p.0%" 
-                          }
-                        }
-                      ' style="height:200px">
+                                hoverable: true, 
+                                clickable: true, 
+                                borderWidth: 0, 
+                                color: "#ccc" 
+                              },   
+                              tooltip: true,
+                              tooltipOpts: 
+                              { 
+                                content: "%s: %p.0%" 
+                              }
+                            }
+                          ' style="height:200px">
+                        </div>
+                      </div>
                     </div>
                   </div>
+                  <div class="col-sm-4">
+                    <div class="panel panel-card p m-b-sm">
+                      
+                    </div>
                   </div>
                 </div>
-                <?php // echo $rol; ?>
-                <!-- <br> -->
-                <?php // echo $ventas; ?>
-                <!-- <div class="panel panel-card p m-b-sm">
-                  <h5 class="no-margin m-b">Ventas</h5>
-                  <div class="text-center" ng-controller="ChartCtrl">
-                      <div ui-jp="plot" ui-options='
-                        <?php echo $ventas; ?>,
-                        {
-                          series: 
-                          { 
-                            pie: 
-                            { 
-                              show: true, 
-                              innerRadius: 0.4, 
-                              stroke: 
+                <div class="row row-xs">
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                        <div class="panel-heading">
+                          <span class="font-bold">Ventas</span>
+                        </div>
+                        <div class="panel-body">
+                          <div ui-jp="plot" ui-options="
+                            [
                               { 
-                                width: 2 
-                              }, 
-                              label: 
-                              { 
-                                show: true, 
-                                threshold: 0.05 
-                              } 
-                            } 
-                          },
-                          colors: 
+                                data: 
+                                  <?php echo $ventas_semana; ?>, 
+                                  points: 
+                                    { 
+                                      show: true, 
+                                      radius: 3
+                                    }, 
+                                  lines: 
+                                    { 
+                                      show: true, 
+                                      lineWidth: 1
+                                    } 
+                              }
+                            ], 
+                            {
+                              colors: ['#3f51b5', '#2196f3'],
+                              series: { shadowSize: 3 },
+                              xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+                              yaxis:{ show: true, font: { color: '#ccc' }},
+                              grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                              tooltip: true,
+                              tooltipOpts: { content: '%x es %y',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+                            }
+                          " style="height:240px" >
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                      <div class="panel-heading">
+                        <span class="font-bold">Visitas</span>
+                        <!-- <small class="block text-muted">Attractive looks</small> -->
+                      </div>
+                      <div class="panel-body">
+                        <div ui-jp="plot" ui-options="
                           [
-                            "#2196f3",
-                            "#ffc107",
-                            "#4caf50",
-                            "#7e57c2"
-                          ],
-                          grid: 
-                          { 
-                            hoverable: true, 
-                            clickable: true, 
-                            borderWidth: 0, 
-                            color: "#ccc" 
-                          },   
-                          tooltip: true,
-                          tooltipOpts: 
-                          { 
-                            content: "%s: %p.0%" 
+                            { data: <?php echo $semena_visita; ?> }
+                          ], 
+                          {
+                            bars: { show: true, fill: true,  barWidth: 0.3, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] } },
+                            colors: ['#2196f3','#4caf50'],
+                            series: { shadowSize: 3 },
+                            xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+                            yaxis:{ show: true, font: { color: '#ccc' }},
+                            grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                            tooltip: true,
+                            tooltipOpts: { content: '%x es %y',  defaultTheme: false, shifts: { x: 0, y: -40 } }
                           }
-                        }
-                      ' style="height:300px">
+                        " style="height:240px" >
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="m-t-xs">
-                    <div class="font-bold"><?php // echo $total_ventas; ?></div>
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                      <!-- <div class="panel panel-card p m-b-sm"> -->
+                        <div class="panel-heading">
+                          <span class="font-bold">KIT</span>
+                        </div>
+                        <div class="panel-body">
+                          <div ui-jp="plot" ui-options="
+                            [
+                              { 
+                                data: <?php echo $semena_kit; ?>, 
+                                  points: 
+                                    { 
+                                      show: true, 
+                                      radius: 3
+                                    }, 
+                                  lines: 
+                                    { 
+                                      show: true, 
+                                      lineWidth: 1
+                                    } 
+                              }
+                            ], 
+                            {
+                              colors: ['#3f51b5', '#2196f3'],
+                              series: { shadowSize: 3 },
+                              xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+                              yaxis:{ show: true, font: { color: '#ccc' }},
+                              grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                              tooltip: true,
+                              tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+                            }
+                          " style="height:240px" >
+                          </div>
+                        </div>
+                      <!-- </div> -->
+                    </div>
                   </div>
-                </div> -->
-              </div>
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                      <div class="panel-heading">
+                        <span class="font-bold">Comisiones</span>
+                        <!-- <small class="block text-muted">Interactive features</small> -->
+                      </div>
+                      <div class="panel-body">
+                        <div ui-jp="plot" ui-options="
+                          [{label:'Series 1', data: 45}, {label:'Series 2', data: 5}, {label:'Series 3', data: 30}, {label:'Series 4', data: 20}],
+                          {
+                            series: { pie: { show: true, innerRadius: 0.6, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
+                            colors: ['#3f51b5','#2196f3'],
+                            grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },   
+                            tooltip: true,
+                            tooltipOpts: { content: '%s: %p.0%' }
+                          }
+                        " style="height:240px"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php } else { ?>
+                
+              <?php } ?>
             </div>
           </div>
         </div>
