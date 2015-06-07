@@ -276,12 +276,11 @@
                   </div>
                   <div class="col-sm-6">
                     <div class="panel panel-card p m-b-sm">
-                      <!-- <div class="panel panel-card p m-b-sm"> -->
-                        <div class="panel-heading">
-                          <span class="font-bold">KIT</span>
-                        </div>
-                        <div class="panel-body">
-                          <div ui-jp="plot" ui-options="
+                      <div class="panel-heading">
+                        <span class="font-bold">KIT</span>
+                      </div>
+                      <div class="panel-body">
+                        <div ui-jp="plot" ui-options="
                             [
                               { 
                                 data: <?php echo $semena_kit; ?>, 
@@ -307,28 +306,26 @@
                               tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
                             }
                           " style="height:240px" >
-                          </div>
                         </div>
-                      <!-- </div> -->
+                      </div>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="panel panel-card p m-b-sm">
                       <div class="panel-heading">
                         <span class="font-bold">Comisiones</span>
-                        <!-- <small class="block text-muted">Interactive features</small> -->
                       </div>
                       <div class="panel-body">
-                        <div ui-jp="plot" ui-options="
-                          [{label:'Series 1', data: 45}, {label:'Series 2', data: 5}, {label:'Series 3', data: 30}, {label:'Series 4', data: 20}],
+                        <div ui-jp="plot" ui-options='
+                          <?php echo $semena_comision; ?>,
                           {
                             series: { pie: { show: true, innerRadius: 0.6, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
-                            colors: ['#3f51b5','#2196f3'],
-                            grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },   
+                            colors: ["#3f51b5","#2196f3"],
+                            grid: { hoverable: true, clickable: true, borderWidth: 0, color: "#ccc" },   
                             tooltip: true,
-                            tooltipOpts: { content: '%s: %p.0%' }
+                            tooltipOpts: { content: "%s: %p.0%" }
                           }
-                        " style="height:240px"></div>
+                        ' style="height:240px"></div>
                       </div>
                     </div>
                   </div>

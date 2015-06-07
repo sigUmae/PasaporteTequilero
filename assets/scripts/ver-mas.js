@@ -45,6 +45,7 @@ $('document').ready(function(){
 		var results = ajax('post',base_url+'config_pasaportes/visitado',false,obj);
 		results.success(function(data){
 			alert(data);
+			location.reload();
 		});
 	}
 

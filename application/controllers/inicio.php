@@ -10,7 +10,7 @@ class Inicio extends CI_Controller {
 	public function index() {
 
 		if ($this->session->userdata('login')) {
-			$this->table_usuarios();
+			// $this->table_usuarios();
 			$data['rol'] = $this->Inicio_m->get_rol($this->session->userdata('id_usuario'));
 			$data['avatar'] = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
 			$data['avatar'] = $data['avatar'][0]->avatar;
@@ -34,19 +34,24 @@ class Inicio extends CI_Controller {
 					} 
 					else {
 						$vendidos = $this->count($total_vendidos[0]->pasaportes);
+						// echo '<pre>';
+						// print_r($vendidos); exit();
 						$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
 					}
 
 					$semena_venta = $this->count_day('info_compra');
 					$semena_visita = $this->count_day('visitas');
 					$semena_kit = $this->count_day('kit','2');
+					$semena_comision = $this->fecha_comision();
+
 					// echo '<pre>';
-					// print_r($this->db->last_query()); exit();
+					// print_r(json_encode($this->fecha_comision())); exit();
 					
 					$data['ventas'] = json_encode($vendidos);
 					$data['ventas_semana'] = json_encode($semena_venta);
 					$data['semena_visita'] = json_encode($semena_visita);
 					$data['semena_kit'] = json_encode($semena_kit);
+					$data['semena_comision'] = json_encode($semena_comision);
 					$data['total_vendidos'] = $total_vendidos[0]->pasaportes;
 					break;
 				case '2':
@@ -87,17 +92,27 @@ class Inicio extends CI_Controller {
 		}
 	}
 
+	private function fecha_comision() {
+	
+		$semana = array();
+		for ($i=1; $i <= 7; $i++) {
+			$day = $this->Inicio_m->count_days($i,'fecha_comision');
+			$semana[] = new stdClass();
+			$semana[$i-1]->label = 'Dia '.$i;
+			$semana[$i-1]->data = $day[0]->pasaportes;
+		}
+		return $semana;
+	}
+
 	private function count_day($tabla,$status="1") {
 	
-		$semena = array();
+		$semana = array();
 		for ($i=1; $i <= 7; $i++) {
 			$day = $this->Inicio_m->count_days($i,$tabla,$status);
-			// echo '<pre>';
-			// print_r($this->db->last_query()); exit();
 			$by_day = array($i,(int)$day[0]->pasaportes);
-			$semena[] = $by_day; 
+			$semana[] = $by_day; 
 		}
-		return $semena;
+		return $semana;
 		
 	}
 

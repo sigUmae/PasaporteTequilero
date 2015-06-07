@@ -87,6 +87,7 @@ $('document').ready(function(){
 		var results = ajax('post',base_url+'config_pasaportes/kit_',true,obj);
 		results.success(function(data){
 			alert(data);
+			location.reload();
 		});
 	}
 

@@ -237,7 +237,13 @@ class Config_pasaportes extends CI_Controller {
     				$this->load->view('config_pasaportes/reportes_visitas_v',$valid);
     				break;	
     			case 2:
-                    $valid['pasaportes'] = $this->visitas_('id_hacienda');
+                    $valid['pasaportes'] = $this->Master_m->filas_condicion('info_compra',array(
+                        // $vendedor.' !=' => '0',
+                        // $vendedor => $id_hacienda,
+                        'tipo_pago'=> 'Pagado',
+                        'status' => '1'
+                    ));
+                    $valid['pasaportes'] = $this->visitas_($valid);
     				$this->load->view('config_pasaportes/registro_visita_v',$valid);
     				break;
                 case 3:
@@ -326,16 +332,21 @@ class Config_pasaportes extends CI_Controller {
         
     }
 
-    private function visitas_($vendedor) {
+    private function visitas_($valid) {
 
-        // $id_vendedor = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
-        // $id_hacienda = ($vendedor == 'id_hacienda') ? $id_vendedor[0]->id_hacienda : $id_vendedor[0]->id_aliado;
-        // print_r(expression)
-        return  $this->Master_m->filas_condicion('info_compra',array(
-            // $vendedor.' !=' => '0',
-            // $vendedor => $id_hacienda,
-            'status' => '1'
-        ));
+        $kits = $this->Master_m->filas('kit');
+        foreach ($valid['pasaportes'] as $key => $value_v) {
+            $valid['pasaportes'][$key]->kit = '0';
+            foreach ($kits as $kit) {
+                if ($value_v->id_pasaporte == $kit->id_pasaporte and $kit->status == '1') {
+                    $valid['pasaportes'][$key]->kit = '1';
+                } 
+                else if ($value_v->id_pasaporte == $kit->id_pasaporte and $kit->status == '2') {
+                    $valid['pasaportes'][$key]->kit = '2';
+                }
+            }
+        }
+        return $valid['pasaportes'];
         
     }
 
@@ -391,16 +402,29 @@ class Config_pasaportes extends CI_Controller {
     
         $id_pasaporte = $this->input->post('id_pasaporte',true);
         $ajax_request = $this->input->is_ajax_request();
-        // print_r($this->input->post()); exit();
         if ($id_pasaporte and $ajax_request) {
-            $this->Master_m->update('kit',array('status' => '2'),array(
-                'id_pasaporte' => $id_pasaporte, 
-                'status' => '1'
+            $id_hacienda = $this->Inicio_m->get_id_vendedor(array(
+                'vendedor' => 'hacienda', 
+                'id_usuario' => $this->session->userdata('id_usuario')
             ));
-            echo 'Kit agregado';
+            if (!empty($id_hacienda)) {
+                $id_hacienda = $id_hacienda[0]->id_hacienda;
+                $this->Master_m->update('kit',array(
+                    'status' => '2', 
+                    'id_hacienda' => $id_hacienda,
+                    'fecha_entrega' => date('Y-m-d H:i:s')
+                    ),array(
+                        'id_pasaporte' => $id_pasaporte, 
+                        'status' => '1'
+                    )
+                );
+                echo 'Kit agregado';
+            }
+            else {
+                echo 'Hacienda no encontrada';
+            }
         } 
         else {
-            // print_r($this->input->post());
             echo 'Ha ocurrido un error';
         }
         
@@ -438,8 +462,6 @@ class Config_pasaportes extends CI_Controller {
                 }
             }
         }
-        // echo '<pre>';
-        // print_r($valid['pasaportes']); exit();
         return $valid;
         
     }

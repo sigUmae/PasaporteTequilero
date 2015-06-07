@@ -214,24 +214,15 @@
                           <td><?php echo $value_p->vendedor?></td>
                           <td>
                           <?php if ($value_p->tipo_pago == 'Pagado') { ?>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                               <img src="<?php echo base_url($value_p->sauza)?>" alt="" width="50">
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                               <img src="<?php echo base_url($value_p->herradura)?>" alt="" width="50">
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                               <img src="<?php echo base_url($value_p->cofradia)?>" alt="" width="50">
                             </div>
-                          <?php } if ($value_p->kit == '1') { ?>
-                            <div data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" class="col-sm-2">
-                              <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect">KIT</button>
-                            </div>
-                          <?php } else if ($value_p->kit == '2') { ?>
-                            <div class="col-sm-2">
-                              <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-error waves-effect waves-effect">KIT</button>
-                            </div>
-                          <?php } ?>
                             <div class="col-sm-2 m-t-n">
                               <a href="<?php echo base_url('ver_mas?pasaporte=').$value_p->id_pasaporte?>">
                                 <span class="label bg-success">Ver más</span>
@@ -239,6 +230,15 @@
                             </div>
                           </td>
                         </tr>
+                      <?php } else { ?>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-2 m-t-n">
+                              <a href="<?php echo base_url('ver_mas?pasaporte=').$value_p->id_pasaporte?>">
+                                <span class="label bg-success">Ver más</span>
+                              </a>
+                        <?php } ?>
                       <?php } ?>
                       </tbody>
                       <tfoot class="hide-if-no-paging">

@@ -186,9 +186,6 @@
                             <th data-hide="phone,tablet">
                                 Fecha de compra
                             </th>
-                            <!-- <th data-hide="phone,tablet" data-name="Date Of Birth">
-                                Estado
-                            </th> -->
                             <th data-hide="phone">
                                 Acción
                             </th>
@@ -202,14 +199,30 @@
                           <td><?php echo $value_p->fecha?></td>
                           <!-- <td><?php echo $value_p->tipo_pago?></td> -->
                           <td>
-                            <!-- <a href="<?php echo base_url('config_pasaportes/visitado').'?pasaporte='.$value_p->id_pasaporte?>"> -->
-                            <span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
+                            <div class="col-sm-2 m-t-n">
+                              <span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
                                   class="label bg-success visita" title="Visita" 
-                                  style="cursor: pointer">Visita</span>
-                            <!-- </a> -->
-                            <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_p->id_pasaporte?>">
-                              <span class="label bg-success" title="Ver más">Ver más</span>
-                            </a>
+                                  style="cursor: pointer">Visita
+                              </span>
+                            </div>
+                            <div class="col-sm-2 m-t-n">
+                              <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_p->id_pasaporte?>">
+                                <span class="label bg-success" title="Ver más">Ver más</span>
+                              </a>
+                            </div>
+                            <?php if ($value_p->kit == '1') { ?>
+                            <div class="col-sm-3">
+                              <div data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" class="col-sm-3">
+                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect">KIT</button>
+                              </div>
+                            </div>
+                            <?php } else if ($value_p->kit == '2') { ?>
+                            <div class="col-sm-3">
+                              <div class="col-sm-3">
+                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-error waves-effect waves-effect">KIT</button>
+                              </div>
+                            </div>
+                            <?php } ?>
                           </td>
                         </tr>
                       <?php } ?>
