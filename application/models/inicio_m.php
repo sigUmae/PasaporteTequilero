@@ -18,14 +18,35 @@ class Inicio_m extends CI_Model {
         }
     }
 
+    public function comision_day($day,$vendedor,$id_vendedor,$con_vendedor='') {
+    
+      return $this->db
+        ->select('count(*) AS pasaportes')
+        ->join('info_compra','fecha_comision.id_pasaporte = info_compra.id_pasaporte AND info_compra.id_'.$vendedor.' = "'.$id_vendedor.'" AND info_compra.status_comision = "2"')
+        ->where('DATE(fecha_comision.fecha) = DATE_SUB(CURDATE(),INTERVAL '.$day.' DAY) '.$con_vendedor)
+        ->get('fecha_comision')
+        ->result();
+
+    }
+
     // DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND DATE(visitas.fecha) < CURDATE()
 
-    public function count_days($day,$tabla,$status="1") {
+    public function count_days($day,$tabla,$status="1",$con_vendedor="") {
     
         return $this->db
           ->select('count(*) AS pasaportes')
-          ->where('DATE(fecha) = DATE_SUB(CURDATE(),INTERVAL '.$day.' DAY) AND status = "'.$status.'"')
+          ->where('DATE(fecha) = DATE_SUB(CURDATE(),INTERVAL '.$day.' DAY) AND status = "'.$status.'" '.$con_vendedor)
           ->get($tabla)
+          ->result();
+      
+    }
+
+    public function count_days_kit($day,$status="2",$con_vendedor="") {
+    
+        return $this->db
+          ->select('count(*) AS pasaportes')
+          ->where('DATE(fecha_entrega) = DATE_SUB(CURDATE(),INTERVAL '.$day.' DAY) AND status = "'.$status.'" '.$con_vendedor)
+          ->get('kit')
           ->result();
       
     }

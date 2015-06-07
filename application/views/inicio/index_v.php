@@ -252,7 +252,6 @@
                     <div class="panel panel-card p m-b-sm">
                       <div class="panel-heading">
                         <span class="font-bold">Visitas</span>
-                        <!-- <small class="block text-muted">Attractive looks</small> -->
                       </div>
                       <div class="panel-body">
                         <div ui-jp="plot" ui-options="
@@ -330,8 +329,208 @@
                     </div>
                   </div>
                 </div>
-              <?php } else { ?>
-                
+              <?php } else if ($admin == '2') { ?>
+                <div class="row row-xs">
+                  <div class="col-sm-4">
+                    <div class="panel panel-card">
+                      <div class="p">
+                        Pasaportes vendidos
+                      </div>
+                      <div class="panel-body text-center" style="height: 180px;">
+                        <div class="m-v-lg">
+                          Hoy
+                          <div class="h2 text-success font-bold"><?php echo $count['total_v_dia']; ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="panel panel-card">
+                      <div class="p" style="color: transparent">
+                        Pasaportes vendidos
+                      </div>
+                      <div class="panel-body text-center" style="height: 180px;">
+                        <div class="m-v-lg">
+                          Semana
+                          <div class="h2 text-success font-bold"><?php echo $count['total_v_semana']; ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="panel panel-card">
+                      <div class="p" style="color: transparent">
+                        Pasaportes vendidos
+                      </div>
+                      <div class="panel-body text-center" style="height: 180px;">
+                        <div class="m-v-lg">
+                          Mes
+                          <div class="h2 text-success font-bold"><?php echo $count['total_v_mes']; ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row row-xs">
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                        <div class="panel-heading">
+                          <span class="font-bold">Ventas</span>
+                        </div>
+                        <div class="panel-body">
+                          <div ui-jp="plot" ui-options="
+                            [
+                              { 
+                                data: 
+                                  <?php echo $ventas_semana; ?>, 
+                                  points: 
+                                    { 
+                                      show: true, 
+                                      radius: 3
+                                    }, 
+                                  lines: 
+                                    { 
+                                      show: true, 
+                                      lineWidth: 1
+                                    } 
+                              }
+                            ], 
+                            {
+                              colors: ['#3f51b5', '#2196f3'],
+                              series: { shadowSize: 3 },
+                              xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+                              yaxis:{ show: true, font: { color: '#ccc' }},
+                              grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                              tooltip: true,
+                              tooltipOpts: { content: '%x es %y',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+                            }
+                          " style="height:240px" >
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                      <div class="panel-heading">
+                        <span class="font-bold">Visitas</span>
+                      </div>
+                      <div class="panel-body">
+                        <div ui-jp="plot" ui-options="
+                          [
+                            { data: <?php echo $semana_visitas; ?> }
+                          ], 
+                          {
+                            bars: { show: true, fill: true,  barWidth: 0.3, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] } },
+                            colors: ['#2196f3','#4caf50'],
+                            series: { shadowSize: 3 },
+                            xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+                            yaxis:{ show: true, font: { color: '#ccc' }},
+                            grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                            tooltip: true,
+                            tooltipOpts: { content: '%x es %y',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+                          }
+                        " style="height:240px" >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                      <div class="panel-heading">
+                        <span class="font-bold">KIT</span>
+                      </div>
+                      <div class="panel-body">
+                        <div ui-jp="plot" ui-options="
+                            [
+                              { 
+                                data: <?php echo $semena_kit; ?>, 
+                                  points: 
+                                    { 
+                                      show: true, 
+                                      radius: 3
+                                    }, 
+                                  lines: 
+                                    { 
+                                      show: true, 
+                                      lineWidth: 1
+                                    } 
+                              }
+                            ], 
+                            {
+                              colors: ['#3f51b5', '#2196f3'],
+                              series: { shadowSize: 3 },
+                              xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+                              yaxis:{ show: true, font: { color: '#ccc' }},
+                              grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                              tooltip: true,
+                              tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+                            }
+                          " style="height:240px" >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="panel panel-card p m-b-sm">
+                      <div class="panel-heading">
+                        <span class="font-bold">Comisiones</span>
+                      </div>
+                      <div class="panel-body">
+                        <div ui-jp="plot" ui-options='
+                          <?php echo $semana_comision; ?>,
+                          {
+                            series: { pie: { show: true, innerRadius: 0.6, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
+                            colors: ["#3f51b5","#2196f3"],
+                            grid: { hoverable: true, clickable: true, borderWidth: 0, color: "#ccc" },   
+                            tooltip: true,
+                            tooltipOpts: { content: "%s: %p.0%" }
+                          }
+                        ' style="height:240px"></div>
+                      </div>
+                    </div>
+                  </div>
+              <?php } else if ($admin == '3') { ?>
+                <div class="row row-xs">
+                  <div class="col-sm-4">
+                    <div class="panel panel-card">
+                      <div class="p">
+                        Pasaportes vendidos
+                      </div>
+                      <div class="panel-body text-center" style="height: 180px;">
+                        <div class="m-v-lg">
+                          Hoy
+                          <div class="h2 text-success font-bold"><?php echo $count['total_v_dia']; ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="panel panel-card">
+                      <div class="p" style="color: transparent">
+                        Pasaportes vendidos
+                      </div>
+                      <div class="panel-body text-center" style="height: 180px;">
+                        <div class="m-v-lg">
+                          Semana
+                          <div class="h2 text-success font-bold"><?php echo $count['total_v_semana']; ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="panel panel-card">
+                      <div class="p" style="color: transparent">
+                        Pasaportes vendidos
+                      </div>
+                      <div class="panel-body text-center" style="height: 180px;">
+                        <div class="m-v-lg">
+                          Mes
+                          <div class="h2 text-success font-bold"><?php echo $count['total_v_mes']; ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               <?php } ?>
             </div>
           </div>

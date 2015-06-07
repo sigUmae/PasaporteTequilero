@@ -25,7 +25,6 @@ class Inicio extends CI_Controller {
 					$data['color_2'] = 'c-admin-50';
 					$data['admin'] = '1';
 					$total_vendidos = $this->Inicio_m->count_pasaportes(array('status' => '1','tipo_pago' => 'Pagado'),'= CURDATE()');
-					// $total_vendidos[0]->pasaportes = '0';
 					if ($total_vendidos[0]->pasaportes == '0') {
 						$obj = new stdClass();
 						$obj->label = 'Vendedor';
@@ -34,14 +33,12 @@ class Inicio extends CI_Controller {
 					} 
 					else {
 						$vendidos = $this->count($total_vendidos[0]->pasaportes);
-						// echo '<pre>';
-						// print_r($vendidos); exit();
 						$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
 					}
 
-					$semena_venta = $this->count_day('info_compra');
+					$semena_venta = $this->count_day('info_compra','1','AND tipo_pago = "Pagado"');
 					$semena_visita = $this->count_day('visitas');
-					$semena_kit = $this->count_day('kit','2');
+					$semena_kit = $this->count_days_kit('2');
 					$semena_comision = $this->fecha_comision();
 
 					// echo '<pre>';
@@ -55,14 +52,49 @@ class Inicio extends CI_Controller {
 					$data['total_vendidos'] = $total_vendidos[0]->pasaportes;
 					break;
 				case '2':
-					$data['admin'] = '0';
+					$data['admin'] = '2';
 					$data['color_1'] = 'c-hacienda';
 					$data['color_2'] = 'c-hacienda-50';
+
+					$id_hacienda = $this->Inicio_m->get_id_vendedor(array(
+						'vendedor' => 'hacienda',
+						'id_usuario' => $this->session->userdata('id_usuario')
+					));
+					if (!empty($id_hacienda)) {
+						$id_hacienda = $id_hacienda[0]->id_hacienda;
+						$data['count'] = $this->count_dsm('hacienda',$id_hacienda);
+						$semena_venta = $this->count_day('info_compra','1','AND id_hacienda = "'.$id_hacienda.'" AND tipo_pago = "Pagado"');
+						$data['ventas_semana'] = json_encode($semena_venta);
+						$semena_visitas = $this->count_day('visitas','1','AND id_hacienda = "'.$id_hacienda.'"');
+						$data['semana_visitas'] = json_encode($semena_visitas);
+						$semena_kit = $this->count_days_kit('2','AND id_hacienda = "'.$id_hacienda.'"');
+						$data['semena_kit'] = json_encode($semena_kit);
+						$semana_comision = $this->count_days_comision('hacienda',$id_hacienda);
+						$data['semana_comision'] = json_encode($semana_comision);
+						// echo '<pre>';
+						// print_r($this->db->last_query()); exit();
+					}
+					else {
+						$this->session->sess_destroy();
+						redirect('login/index');
+					}
+
 					break;
 				case '3':
-					$data['admin'] = '0';
+					$data['admin'] = '3';
 					$data['color_1'] = 'c-aliado';
 					$data['color_2'] = 'c-aliado-50';
+					$id_aliado = $this->Inicio_m->get_id_vendedor(array(
+						'vendedor' => 'aliado',
+						'id_usuario' => $this->session->userdata('id_usuario')
+					));
+					if (!empty($id_aliado)) {
+						$id_aliado = $id_aliado[0]->id_aliado;
+						$data['count'] = $this->count_dsm('aliado',$id_aliado);
+						// echo '<pre>';
+						// print_r($data['count']); exit();
+					}
+
 					break;
 				default:
 					$data['admin'] = '0';
@@ -92,6 +124,31 @@ class Inicio extends CI_Controller {
 		}
 	}
 
+	private function count_dsm($vendedor,$id_vendedor) {
+	
+		$total_vendidos = $this->Inicio_m->count_pasaportes(array(
+			'status' => '1',
+			'tipo_pago' => 'Pagado',
+			'id_'.$vendedor => $id_vendedor
+		),'= CURDATE()');
+		$count['total_v_dia'] = $total_vendidos[0]->pasaportes;
+		$total_vendidos = $this->Inicio_m->count_pasaportes(array(
+			'status' => '1',
+			'tipo_pago' => 'Pagado',
+			'id_'.$vendedor => $id_vendedor
+		),'>= DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND DATE(FECHA) != CURDATE()');
+		$count['total_v_semana'] = $total_vendidos[0]->pasaportes;
+		$total_vendidos = $this->Inicio_m->count_pasaportes(array(
+			'status' => '1',
+			'tipo_pago' => 'Pagado',
+			'id_'.$vendedor => $id_vendedor
+		),'>= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND DATE(FECHA) != CURDATE()');
+		$count['total_v_mes'] = $total_vendidos[0]->pasaportes;
+		// echo '<pre>';
+		// print_r($count['total_v_mes']); exit();
+		return $count;
+	}
+
 	private function fecha_comision() {
 	
 		$semana = array();
@@ -104,11 +161,36 @@ class Inicio extends CI_Controller {
 		return $semana;
 	}
 
-	private function count_day($tabla,$status="1") {
+	private function count_days_comision($vendedor,$id_vendedor,$con_vendedor="") {
 	
 		$semana = array();
 		for ($i=1; $i <= 7; $i++) {
-			$day = $this->Inicio_m->count_days($i,$tabla,$status);
+			$day = $this->Inicio_m->comision_day($i,$vendedor,$id_vendedor,$con_vendedor);
+			$semana[] = new stdClass();
+			$semana[$i-1]->label = 'Dia '.$i;
+			$semana[$i-1]->data = $day[0]->pasaportes;
+		}
+		return $semana;
+		
+	}
+
+	private function count_days_kit($status="1",$con_vendedor="") {
+	
+		$semana = array();
+		for ($i=1; $i <= 7; $i++) {
+			$day = $this->Inicio_m->count_days_kit($i,$status,$con_vendedor);
+			$by_day = array($i,(int)$day[0]->pasaportes);
+			$semana[] = $by_day; 
+		}
+		return $semana;
+		
+	}
+
+	private function count_day($tabla,$status="1",$con_vendedor="") {
+	
+		$semana = array();
+		for ($i=1; $i <= 7; $i++) {
+			$day = $this->Inicio_m->count_days($i,$tabla,$status,$con_vendedor);
 			$by_day = array($i,(int)$day[0]->pasaportes);
 			$semana[] = $by_day; 
 		}

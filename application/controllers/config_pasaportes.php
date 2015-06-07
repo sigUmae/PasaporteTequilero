@@ -87,6 +87,7 @@ class Config_pasaportes extends CI_Controller {
         if ($id_pasaporte and $ajax_request) {
             $existe = $this->Master_m->filas_condicion('info_compra',array('id_pasaporte' => $id_pasaporte));
             if (!empty($existe)) {
+                // $id_vendedor
                 $this->Master_m->update('info_compra',array('status_comision' => '2'),array('id_pasaporte' => $id_pasaporte));
                 $this->Master_m->insert('fecha_comision',array('id_pasaporte' => $id_pasaporte)); 
                 echo 'Hecho';
