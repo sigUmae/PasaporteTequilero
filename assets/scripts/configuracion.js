@@ -5,6 +5,7 @@ $('document').ready(function(){
 	var btn_a = $('#aceptar');
 	var in_a = $('#a-aliado');
 	var frm = $('#frm-usuario');
+	var id_pasaporte = "";
 	var change_usuario = 0;
 	var change_correo = 0;
 	var change_contrasena = 0;
@@ -122,27 +123,60 @@ $('document').ready(function(){
 		});
 	}
 
+	function crear_confirmar(arguments) {
+		$('#before-confirm').after('<div class="form-group has-error">'+
+                    '<input id="confirm_contrasena" style="text-align: center" type="password" class="form-control" placeholder="Por favor confirme su contraseña para continuar">'+
+                  '</div>'+
+                  '<div style="width: 100%; text-align: center">'+
+                    '<button '+
+                      'id="confirmar"'+
+                      'type="button"'+
+                      'md-ink-ripple=""'+ 
+                      'class="btn-eliminar-venta btn btn-fw btn-danger waves-effect waves-effect">'+
+                      'Confirmar'+
+                    '</button>'+
+                  '</div>');
+	}
+
 	// - EVENTOS
+
+	$('#contain-panel').on('click','#confirmar',function(){
+		var obj = {
+			'id_pasaporte': id_pasaporte,
+			'contrasena': $('#confirm_contrasena').val()
+		}
+		var result = ajax('post',base_url+'configuracion/eliminar_pasaporte',false,obj);
+		result.success(function(data){
+			alert(data);
+			if (data == 'Hecho') {
+				location.reload();
+			}
+		});
+	});
+
+	$('.btn-eliminar-venta').on('click',function(){
+		if (confirm("Se eliminará la venta del pasaporte ¿Desea continuar?") == true) {
+        		crear_confirmar();
+        		id_pasaporte = $(this).data('id-pasaporte');
+	   }
+	});
 
 	$('.btn-eliminar').on('click',function(){
 		if (confirm("Se eliminará el usuario ¿Desea continuar?") == true) {
-        eliminar_usuario($(this).parent().parent().data('id-usuario'));
+        	eliminar_usuario($(this).parent().parent().data('id-usuario'));
 	   }
 	});
 
 	$('.usuario').on('change',function(){
 		change_usuario = 1;
-		// alert('text')
 	});
 
 	$('.correo').on('change',function(){
 		change_correo = 1;
-		// alert('text')
 	});
 
 	$('.contrasena').on('change',function(){
 		change_contrasena = 1;
-		// alert('text')
 	});
 
 	$('.frm').on('submit',function(e){

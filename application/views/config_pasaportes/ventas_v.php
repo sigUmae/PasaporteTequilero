@@ -1,6 +1,5 @@
 <?php echo $header; ?>
     <div class="app">  
-      <!-- aside -->
       <aside id="aside" class="app-aside modal fade " role="menu">
         <div class="left">
           <div class="box bg-white">
@@ -105,19 +104,11 @@
           </div>
         </div>
       </aside>
-      <!-- / aside -->
-      <!-- content -->
       <div id="content" class="app-content" role="main">
         <div class="box">
-          <!-- Content Navbar -->
           <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
-            <!-- Open side - Naviation on mobile -->
             <a md-ink-ripple  data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
-            <!-- / -->
-            <!-- Page title - Bind to $state's title -->
             <div class="navbar-item pull-left h4">Pasaporte tequilero - <?php echo $rol; ?></div>
-            <!-- / -->
-            <!-- Common tools -->
             <ul class="nav navbar-tool pull-right">
               <li class="dropdown">
                 <a md-ink-ripple data-toggle="dropdown">
@@ -135,16 +126,12 @@
               </li>
             </ul>
             <div class="pull-right" ui-view="navbar@"></div>
-            <!-- / -->
-            <!-- Search form -->
             <div id="search" class="pos-abt w-full h-full indigo hide">
               <div class="box">
                 <div class="box-col w-56 text-center">
-                  <!-- hide search form -->
                   <a md-ink-ripple class="navbar-item inline"  ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
                 </div>
                 <div class="box-col v-m">
-                  <!-- bind to app.search.content -->
                   <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
                 </div>
                 <div class="box-col w-56 text-center">
@@ -152,40 +139,51 @@
                 </div>
               </div>
             </div>
-            <!-- / -->
           </div>
-          <!-- Content -->
           <div class="box-row">
             <div class="box-cell">
               <div id="contain-frm" class="box-inner padding">
-                <?php echo validation_errors();?>
-                <form id="frm-venta-a" action="" method="post">
-                  <div class="card" ng-controller="MDInputCtrl">
+                <form class="frm-venta-a" data-id="<?php echo $total_id; ?>" id="frm-<?php echo $total_id; ?>" action="" method="post">
+                  <div id="frm_<?php echo $total_id; ?>" class="card" ng-controller="MDInputCtrl">
                     <div class="card-heading">
-                      <h2>Venta</h2>
+                      <h2 style="float: left">Venta</h2>
+                      <div style="text-align: right">
+                        <input id="cantidad" 
+                          style="width: 108px; margin-right: 10px; text-align: center;" 
+                          placeholder="Cantidad" 
+                          class="md-input" 
+                          type="text">
+                        <button 
+                          type="button"
+                          id="nueva-cantidad"
+                          md-ink-ripple="" 
+                          class="btn btn-fw btn-success waves-effect waves-effect">
+                          Aceptar
+                        </button>
+                      </div>
                     </div>
                     <div class="card-body green">
                       <div class="row row-sm">
                         <div class="col-sm-4 gr">
                           <div class="md-form-group">
-                            <input id="id_pasaporte" disabled="" class="md-input md-input">
+                            <input value="<?php echo $total_id; ?>" name="id_pasaporte" disabled="" class="id_pasaporte md-input md-input">
                             <label>ID pasaporte</label>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="md-form-group">
-                            <input id="vendedor" class="md-input md-input" disabled="" required value="<?php echo $n_vendedor?>">
-                            <label id="n-vendedor"><?php echo $vendedor;?></label>
+                            <input class="md-input md-input vendedor" name="vendedor" disabled="" required value="<?php echo $n_vendedor?>">
+                            <label class="n-vendedor" ><?php echo $vendedor;?></label>
                           </div>
                         </div>
                         <div class="col-sm-2">
                           <?php if ($vendedor == 'Hacienda') { ?>
                           <div class="md-form-group">
                             <label class="radio-inline">
-                              <input type="radio" name="inlineRadioOptions" id="virtual" value="virtual"> Virtual
+                              <input data-id="<?php echo $total_id; ?>" type="radio" name="inlineRadioOptions" class="virtual" value="virtual"> Virtual
                             </label>
                             <label class="radio-inline">
-                              <input type="radio" name="inlineRadioOptions" id="fisico" value="fisico"> Físico
+                              <input data-id="<?php echo $total_id; ?>" type="radio" name="inlineRadioOptions" class="fisico" value="fisico"> Físico
                             </label>
                           </div>
                           <?php } ?>
@@ -196,7 +194,7 @@
                       <div class="row row-sm">
                         <div class="col-sm-8">
                           <div class="md-form-group">
-                            <input id="propietario" name="propietario" class="md-input md-input" type="text" required>
+                            <input name="propietario" class="propietario md-input md-input" type="text" required>
                             <label>Propietario</label>
                           </div>
                         </div>
@@ -204,7 +202,7 @@
                           <div class="md-form-group">
                             <input class="md-input md-input no-display" >
                             <label>Tipo de pago</label>
-                            <select id="pago" name="pago" class="form-control select" required>
+                            <select data-id="<?php echo $total_id; ?>" name="pago" class="form-control select pago" required>
                               <option value="">Seleccionar...</option>
                               <option value="1">Efectivo</option>
                               <option value="2">Tarjeta de crédito/debito</option>
@@ -214,101 +212,49 @@
                       </div>
                       <div class="row row-sm">
                         <?php if ($vendedor == 'Hacienda') { ?>
-                          <div id="fisico_input" class="col-sm-4 no-display">
+                          <div class="fisico_input col-sm-12 no-display">
                             <div class="md-form-group">
-                              <input id="id_fisico" name="fisico" class="md-input md-input" type="text">
+                              <input name="fisico" class="id_fisico md-input md-input" type="text">
                               <label>ID pasaporte físico</label>
-                            </div>
+                            </div>                           
                           </div>
                         <?php } ?>
+                        <div class="c_referencia col-sm-12 no-display">
+                          <div class="md-form-group">
+                            <input name="referencia" class="num_referencia md-input md-input" type="text">
+                            <label>Número de referencia</label>
+                          </div>
+                        </div>
                         <div class="col-sm-4">
                           <div class="md-form-group">
-                            <input id="correo" name="correo" class="md-input md-input" type="email">
+                            <input name="correo" class="correo md-input md-input" type="email" required>
                             <label>Correo electrónico</label>
                           </div>
                         </div>
                         <div class="col-sm-4">
                           <div class="md-form-group">
-                            <input id="telefono" name="telefono" class="md-input md-input" type="text">
+                            <input name="telefono" class="telefono md-input md-input" type="text">
                             <label>Teléfono</label>
                           </div>
                         </div>
                          <div class="col-sm-12">
                           <div class="md-form-group">
-                            <input id="domicilio" name="domicilio" class="md-input md-input" type="text">
+                            <input name="domicilio" class="domicilio md-input md-input" type="text">
                             <label>Domicilio</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="dni" name="dni" class="md-input md-input" type="text">
-                            <label>DNI</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="ciudad" name="ciudad" class="md-input md-input" type="text">
-                            <label>Ciudad</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="estado" name="estado" class="md-input md-input" type="text">
-                            <label>Estado</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="pais" name="pais" class="md-input md-input" type="text">
-                            <label>País</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="cp" name="cp" class="md-input md-input" type="text">
-                            <label>Código Postal</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="num-tarjeta" name="num_tarjeta" class="md-input md-input" type="text" pattern="^[0-9]{13,16}$">
-                            <label>Número tarjeta</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="fecha_e" class="md-input md-input no-display" type="text">
-                            <label>Fecha de expiración</label>
-                            <div class='input-group date' id='f_expiracion'>
-                                <input id="f-expiracion-i" name="fecha_e_i" type='text' class="form-control" />
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input id="c-seguridad" name="c-seguridad"  class="md-input md-input" type="text" pattern="^[0-9]{3,4}$">
-                            <label>Código de seguridad</label>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 no-display-tarjeta">
-                          <div class="md-form-group">
-                            <input class="md-input md-input no-display" >
-                            <label>Tarjeta</label>
-                            <select id="tarjeta" name="tarjeta" class="form-control select">
-                              <option value="">Seleccionar...</option>
-                              <option value="1">Visa</option>
-                              <option value="2">MasterCard</option>
-                            </select>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="md-form-group">
-                            <button id="aceptar" type="submit" md-ink-ripple="" class="btn btn-fw btn-success waves-effect waves-effect btn-aceptar">Aceptar</button>  
-                            <a href="<?php echo base_url('config_pasaportes/ventas')?>">
-                              <button type="button" md-ink-ripple="" class="btn btn-fw btn-error waves-effect waves-effect">Cancelar</button>  
+                            <button 
+                              value="frm-<?php echo $total_id; ?>" 
+                              type="submit" 
+                              md-ink-ripple="" 
+                              class="aceptar btn btn-fw btn-success waves-effect waves-effect btn-aceptar">
+                              Guardar
+                            </button>
+                            <button type="button" md-ink-ripple="" class="btn btn-fw btn-error waves-effect waves-effect">Borrar</button>  
+                            <a target="_blank" href="https://secure.payulatam.com/payment_tools/index2.zul#ITEM=82">
+                              <button type="button"  md-ink-ripple="" class="green btn btn-fw btn-error waves-effect waves-effect">Terminal virtual</button>  
                             </a>
                           </div>
                         </div>
@@ -316,6 +262,118 @@
                     </div>
                   </div>
                 </form>
+                <?php if (isset($_GET['cantidad']) and $_GET['action'] and !empty($_GET['cantidad'])) { 
+                  $cantidad = (int)$_GET['cantidad']; ?>
+                  <?php if (is_int($cantidad)) { 
+                    for ($i=1; $i < $cantidad; $i++) { ?>
+                      <form class="frm-venta-a" data-id="<?php echo $total_id+$i; ?>" id="frm-<?php echo $total_id+$i; ?>" action="" method="post">
+                        <div id="frm_<?php echo $total_id+$i; ?>" class="card" ng-controller="MDInputCtrl">
+                          <div class="card-heading">
+                            <h2>Venta</h2>
+                          </div>
+                          <div class="card-body green">
+                            <div class="row row-sm">
+                              <div class="col-sm-4 gr">
+                                <div class="md-form-group">
+                                  <input value="<?php echo $total_id+$i; ?>" name="id_pasaporte" disabled="" class="id_pasaporte md-input md-input">
+                                  <label>ID pasaporte</label>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="md-form-group">
+                                  <input class="md-input md-input vendedor" name="vendedor" disabled="" required value="<?php echo $n_vendedor?>">
+                                  <label class="n-vendedor" ><?php echo $vendedor;?></label>
+                                </div>
+                              </div>
+                              <div class="col-sm-2">
+                                <?php if ($vendedor == 'Hacienda') { ?>
+                                <div class="md-form-group">
+                                  <label class="radio-inline">
+                                    <input data-id="<?php echo $total_id+$i; ?>" type="radio" name="inlineRadioOptions" class="virtual" value="virtual"> Virtual
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input data-id="<?php echo $total_id+$i; ?>" type="radio" name="inlineRadioOptions" class="fisico" value="fisico"> Físico
+                                  </label>
+                                </div>
+                                <?php } ?>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <div class="row row-sm">
+                              <div class="col-sm-8">
+                                <div class="md-form-group">
+                                  <input name="propietario" class="propietario md-input md-input" type="text" required>
+                                  <label>Propietario</label>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <div class="md-form-group">
+                                  <input class="md-input md-input no-display" >
+                                  <label>Tipo de pago</label>
+                                  <select data-id="<?php echo $total_id+$i; ?>" name="pago" class="form-control select pago" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="1">Efectivo</option>
+                                    <option value="2">Tarjeta de crédito/debito</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row row-sm">
+                              <?php if ($vendedor == 'Hacienda') { ?>
+                                <div class="fisico_input col-sm-12 no-display">
+                                  <div class="md-form-group">
+                                    <input name="fisico" class="id_fisico md-input md-input" type="text">
+                                    <label>ID pasaporte físico</label>
+                                  </div>                           
+                                </div>
+                              <?php } ?>
+                              <div class="c_referencia col-sm-12 no-display">
+                                <div class="md-form-group">
+                                  <input name="referencia" class="num_referencia md-input md-input" type="text">
+                                  <label>Número de referencia</label>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <div class="md-form-group">
+                                  <input name="correo" class="correo md-input md-input" type="email" required>
+                                  <label>Correo electrónico</label>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <div class="md-form-group">
+                                  <input name="telefono" class="telefono md-input md-input" type="text">
+                                  <label>Teléfono</label>
+                                </div>
+                              </div>
+                               <div class="col-sm-12">
+                                <div class="md-form-group">
+                                  <input name="domicilio" class="domicilio md-input md-input" type="text">
+                                  <label>Domicilio</label>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="md-form-group">
+                                  <button 
+                                    value="frm-<?php echo $total_id+$i; ?>" 
+                                    type="submit" 
+                                    md-ink-ripple="" 
+                                    class="aceptar btn btn-fw btn-success waves-effect waves-effect btn-aceptar">
+                                    Guardar
+                                  </button>
+                                  <button type="button" md-ink-ripple="" class="btn btn-fw btn-error waves-effect waves-effect">Borrar</button>  
+                                  <a target="_blank" href="https://secure.payulatam.com/payment_tools/index2.zul#ITEM=82">
+                                    <button type="button"  md-ink-ripple="" class="green btn btn-fw btn-error waves-effect waves-effect">Terminal virtual</button>  
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    <?php } ?>
+                  <?php } ?>
+                <?php } ?>
               </div>
             </div>
           </div>

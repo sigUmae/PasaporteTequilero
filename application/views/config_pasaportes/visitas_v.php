@@ -167,9 +167,6 @@
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
                       <thead>
                         <tr>
-                            <th data-toggle="true">
-                                ID
-                            </th>
                             <th>
                                 Propietario
                             </th>
@@ -187,7 +184,6 @@
                       <tbody>
                       <?php foreach ($pasaportes as $value_p) { ?>
                         <tr data-id="<php echo $value_p->id?>">
-                          <td><?php echo $value_p->id?></td>
                           <td><?php echo $value_p->propietario?></td>
                           <td><?php echo $value_p->vendedor?></td>
                           <td><?php echo $value_p->tipo_pago?></td>

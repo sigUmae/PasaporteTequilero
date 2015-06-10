@@ -10,14 +10,38 @@ class Configuracion extends CI_Controller {
     public function index() {
 
     } 
-
-    public function eliminar() {
+    
+     public function eliminar() {
     
         $id_usuario = $this->input->post('id_usuario',true);
         $ajax_request = $this->input->is_ajax_request();
         if ($id_usuario and $ajax_request) {
             $this->Master_m->update('usuarios',array('status' => '0'),array('id' => $id_usuario));
             echo 'Hecho';
+        }
+        
+    }
+
+    public function eliminar_pasaporte() {
+    
+        $id_pasaporte = $this->input->post('id_pasaporte',true);
+        $contrasena = $this->input->post('contrasena',true);
+        $ajax_request = $this->input->is_ajax_request();
+        if ($id_pasaporte and $contrasena and $ajax_request) {
+            $correcto = $this->Master_m->filas_condicion('usuarios',array(
+                'id' => $this->session->userdata('id_usuario'),
+                'contrasena' => md5($contrasena)
+            ));
+            if (!empty($correcto)) {
+                $this->Master_m->update('info_compra',array('status' => '0'),array('id_pasaporte' => $id_pasaporte));
+                echo 'Hecho';
+            }
+            else {
+                echo 'Contraseña incorrecta';
+            }
+        }
+        else {
+            echo 'El campo contraseña es requerido';
         }
         
     }
@@ -32,6 +56,7 @@ class Configuracion extends CI_Controller {
         $c_correo = $this->input->post('c_correo',true);
         $c_contrasena = $this->input->post('c_contrasena',true);
         $ajax_request = $this->input->is_ajax_request();
+        // print_r($this->input->post('submit')); exit();
         if ($id_usuario and $usuario and $correo and $contrasena and $ajax_request) {
             if ($this->input->post('submit') == 'frm-'.$id_usuario) {
                 if ($c_usuario == '1') {
@@ -80,7 +105,7 @@ class Configuracion extends CI_Controller {
 	   					$this->load->view('configuracion/alta_v',$valido);
 	   					break;
 	   				case 'gestion':
-                        $valido['usuarios'] = $this->Master_m->filas_condicion('usuarios',array('status' => '1', 'id_rol !=' => '1'));
+	   					$valido['usuarios'] = $this->Master_m->filas_condicion('usuarios',array('status' => '1', 'id_rol !=' => '1'));
 	   					$this->load->view('configuracion/gestion_v',$valido);
 	   					break;
 	   				default:
@@ -221,6 +246,7 @@ class Configuracion extends CI_Controller {
     	
     }
 
+    
     private function menu() {
 
     	if ($this->session->userdata('login')) {

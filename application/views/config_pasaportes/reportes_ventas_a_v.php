@@ -1,5 +1,6 @@
 <?php echo $header; ?>
     <div class="app">
+      <!-- aside -->
       <aside id="aside" class="app-aside modal fade " role="menu">
         <div class="left">
           <div class="box bg-white">
@@ -100,17 +101,7 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <nav>
-              <ul class="nav b-t b">
-                <li>
-                  <a href="http://themeforest.net/item/materil-responsive-admin-dashboard-template/11062969" target="_blank" md-ink-ripple>
-                    <i class="icon mdi-action-help i-20"></i>
-                    <span>Help &amp; Feedback</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            </div>    
           </div>
         </div>
       </aside>
@@ -195,7 +186,6 @@
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
                       <thead>
                         <tr>
-                          <th data-toggle="true">ID</th>
                           <th>Propietario</th>
                           <th data-hide="phone,tablet">Fecha de compra</th>
                           <th data-hide="phone,tablet">Estado</th>
@@ -206,7 +196,6 @@
                       <tbody>
                       <?php foreach ($pasaportes as $value_p) { ?>
                         <tr>
-                          <td><?php echo $value_p->id?></td>
                           <td><?php echo $value_p->propietario?></td>
                           <td><?php echo $value_p->fecha?></td>
                           <td><?php echo $value_p->tipo_pago?></td>

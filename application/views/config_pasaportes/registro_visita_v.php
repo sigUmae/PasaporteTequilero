@@ -177,9 +177,6 @@
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
                       <thead>
                         <tr>
-                            <th data-toggle="true">
-                                ID
-                            </th>
                             <th>
                                 Propietario
                             </th>
@@ -194,16 +191,38 @@
                       <tbody>
                       <?php foreach ($pasaportes as $value_p) { ?>
                         <tr data-id="<php echo $value_p->id?>">
-                          <td><?php echo $value_p->id?></td>
                           <td><?php echo $value_p->propietario?></td>
                           <td><?php echo $value_p->fecha?></td>
                           <!-- <td><?php echo $value_p->tipo_pago?></td> -->
                           <td>
                             <div class="col-sm-2 m-t-n">
-                              <span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
-                                  class="label bg-success visita" title="Visita" 
-                                  style="cursor: pointer">Visita
-                              </span>
+                            <?php switch($id_hacienda_v){
+                            	case 'sauza':
+                            		if($value_p->sauza == '0') { ?>
+	                            		<span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
+		                                  class="label bg-success visita" title="Visita" 
+		                                  style="cursor: pointer">Visita
+		                              	</span>
+                            		<?php }
+                            		break;
+                            	case 'herradura':
+                            		if($value_p->herradura == '0') { ?>
+	                            		<span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
+		                                  class="label bg-success visita" title="Visita" 
+		                                  style="cursor: pointer">Visita
+		                              	</span>
+                            		<?php }
+                            		break;
+                            	case 'cofradia':
+                            		if($value_p->cofradia== '0') { ?>
+	                            		<span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
+		                                  class="label bg-success visita" title="Visita" 
+		                                  style="cursor: pointer">Visita
+		                              	</span>
+                            		<?php }
+                            		break;
+                            } ?>
+                              
                             </div>
                             <div class="col-sm-2 m-t-n">
                               <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_p->id_pasaporte?>">
@@ -213,13 +232,13 @@
                             <?php if ($value_p->kit == '1') { ?>
                             <div class="col-sm-3">
                               <div data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" class="col-sm-3">
-                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect">KIT</button>
+                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect">Enviar KIT</button>
                               </div>
                             </div>
                             <?php } else if ($value_p->kit == '2') { ?>
                             <div class="col-sm-3">
                               <div class="col-sm-3">
-                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-error waves-effect waves-effect">KIT</button>
+                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-error waves-effect waves-effect">KIT enviado</button>
                               </div>
                             </div>
                             <?php } ?>

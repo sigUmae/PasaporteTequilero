@@ -102,32 +102,14 @@
                 </div>
               </div>
             </div>
-           <!--  <nav>
-             <ul class="nav b-t b">
-               <li>
-                 <a href="http://themeforest.net/item/materil-responsive-admin-dashboard-template/11062969" target="_blank" md-ink-ripple>
-                   <i class="icon mdi-action-help i-20"></i>
-                   <span>Help &amp; Feedback</span>
-                 </a>
-               </li>
-             </ul>
-           </nav> -->
           </div>
         </div>
       </aside>
-      <!-- / aside -->
-      <!-- content -->
       <div id="content" class="app-content" role="main">
         <div class="box">
-          <!-- Content Navbar -->
           <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
-            <!-- Open side - Naviation on mobile -->
             <a md-ink-ripple  data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
-            <!-- / -->
-            <!-- Page title - Bind to $state's title -->
             <div class="navbar-item pull-left h4">Pasaporte tequilero - <?php echo $rol; ?></div>
-            <!-- / -->
-            <!-- Common tools -->
             <ul class="nav navbar-tool pull-right">
               </li>
               <li class="dropdown">
@@ -144,16 +126,12 @@
               </li>
             </ul>
             <div class="pull-right" ui-view="navbar@"></div>
-            <!-- / -->
-            <!-- Search form -->
             <div id="search" class="pos-abt w-full h-full indigo hide">
               <div class="box">
                 <div class="box-col w-56 text-center">
-                  <!-- hide search form -->
                   <a md-ink-ripple class="navbar-item inline"  ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
                 </div>
                 <div class="box-col v-m">
-                  <!-- bind to app.search.content -->
                   <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
                 </div>
                 <div class="box-col w-56 text-center">
@@ -161,20 +139,16 @@
                 </div>
               </div>
             </div>
-            <!-- / -->
           </div>
-          <!-- Content -->
           <div class="box-row">
             <div class="box-cell">
               <div class="box-inner padding">
-                <div class="panel panel-default">
+                <div id="contain-panel" class="panel panel-default">
                   <div class="panel-heading">
-                    <!-- <div class="col-sm-12"> -->
-                    <span class="m-l">Reporte ventas</span>
-                    <!-- </div> -->
+                    Reporte ventas
                   </div>
-                  <div class="panel-body b-b b-light">
-                    <div class="col-sm-6">
+                  <div id="before-confirm" class="panel-body b-b b-light">
+                    <div class="col-sm-6" style="padding-left: 0">
                       <a href="<?php echo base_url('config_pasaportes/ventas?action=venta')?>">
                         <button  md-ink-ripple="" class="btn btn-fw btn-success waves-effect waves-effect btn-aceptar">Nueva venta</button>
                       </a>
@@ -187,23 +161,29 @@
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
                       <thead>
                         <tr>
-                            <th data-toggle="true">
-                                Número de compra
-                            </th>
                             <th>
                                 Propietario
                             </th>
                             <th data-hide="phone,tablet">
                                 Fecha
                             </th>
+                            <th>Acción</th>
                         </tr>
                       </thead>
                       <tbody>
                       <?php foreach ($ventas_ as $key => $value_v) { ?>
                         <tr>
-                          <td><?php echo $value_v->id?></td>
                           <td><?php echo $value_v->propietario?></td>
                           <td><?php echo $value_v->fecha?></td>
+                          <td>
+                            <button
+                              data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
+                              type="button" 
+                              md-ink-ripple="" 
+                              class="btn-eliminar-venta btn btn-fw btn-error waves-effect waves-effect">
+                              Eliminar
+                            </button>
+                          </td>
                         </tr>
                       <?php } ?>
                       </tbody>

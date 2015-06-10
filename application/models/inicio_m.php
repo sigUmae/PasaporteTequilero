@@ -17,19 +17,27 @@ class Inicio_m extends CI_Model {
             return false;
         }
     }
+    
+    public function count_web($fecha='= CURDATE()') {
+    
+      return $this->db
+        ->select('count(info_compra.id_web) AS data')
+        ->where('DATE(fecha) '.$fecha.' AND status ="1" AND id_web="1"')
+        ->get('info_compra')
+        ->result();
+    }
 
     public function comision_day($day,$vendedor,$id_vendedor,$con_vendedor='') {
     
       return $this->db
         ->select('count(*) AS pasaportes')
         ->join('info_compra','fecha_comision.id_pasaporte = info_compra.id_pasaporte AND info_compra.id_'.$vendedor.' = "'.$id_vendedor.'" AND info_compra.status_comision = "2"')
-        ->where('DATE(fecha_comision.fecha) = DATE_SUB(CURDATE(),INTERVAL '.$day.' DAY) '.$con_vendedor)
+        ->where('info_compra.status = "1" AND DATE(fecha_comision.fecha) = DATE_SUB(CURDATE(),INTERVAL '.$day.' DAY) '.$con_vendedor)
         ->get('fecha_comision')
         ->result();
 
     }
 
-    // DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND DATE(visitas.fecha) < CURDATE()
 
     public function count_days($day,$tabla,$status="1",$con_vendedor="") {
     
@@ -53,7 +61,6 @@ class Inicio_m extends CI_Model {
 
     public function get_id_vendedor($condicion) {
     
-      // SELECT * FROM usuarios JOIN hacienda ON usuarios.id_hacienda = hacienda.id AND usuarios.id = '9'
       return $this->db
         ->join($condicion['vendedor'],'usuarios.id_'.$condicion['vendedor'].' = '.$condicion['vendedor'].'.id AND usuarios.id = "'.$condicion['id_usuario'].'"')
         ->get('usuarios')
@@ -74,21 +81,12 @@ class Inicio_m extends CI_Model {
         }
     }
 
-    public function count_web($fecha='= CURDATE()') {
-    
-      return $this->db
-        ->select('count(info_compra.id_web) AS data')
-        ->where('DATE(fecha) '.$fecha.' AND status ="1" AND id_web="1"')
-        ->get('info_compra')
-        ->result();
-    }
-
     public function count_by_vendedor($vendedor=false,$fecha='= CURDATE()') {
       if ($vendedor) {
         return $this->db
           ->select('count(info_compra.id_'.$vendedor.') AS data, '.$vendedor.'.'.$vendedor.' AS label')
           ->join($vendedor,'info_compra.id_'.$vendedor.' = '.$vendedor.'.id')
-          ->where('DATE(fecha) '.$fecha)
+          ->where('info_compra.status = "1" and DATE(fecha) '.$fecha)
           ->group_by('info_compra.id_'.$vendedor)
           ->get('info_compra')
           ->result();

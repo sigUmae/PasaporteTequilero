@@ -55,6 +55,18 @@ $('document').ready(function(){
 			alta_visita($(this).data('id-pasaporte'));
 		}
 	});
+	
+	$('#enviar_pt').on('click',function(){
+
+		var obj = {
+			'id_pasaporte': $(this).data('id-pasaporte')
+		}
+		var result = ajax('post',base_url+'config_pasaportes/enviar_pasaporte',true,obj);
+		result.success(function(data){
+			alert(data);
+		});
+
+	});
 
 	function tool_v() {
 		$('.tooltip').each(function(){
@@ -77,18 +89,6 @@ $('document').ready(function(){
 			});
 		});
 	}
-
-	$('#enviar_pt').on('click',function(){
-
-		var obj = {
-			'id_pasaporte': $(this).data('id-pasaporte')
-		}
-		var result = ajax('post',base_url+'config_pasaportes/enviar_pasaporte',true,obj);
-		result.success(function(data){
-			alert(data);
-		});
-
-	});
 
 	tool_v();
 

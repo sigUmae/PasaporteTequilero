@@ -65,7 +65,7 @@ $('document').ready(function(){
 				case '0': alert('Error');
 					break;
 				case '1':
-					alert('Se ha enviado un correo con instrucciones para recuperar la cuenta');
+					alert('Correo enviado');
 					window.location.replace(base_url+'login/index');
 					break;
 				case '2':
@@ -86,6 +86,7 @@ $('document').ready(function(){
 				case '0': alert('Error');
 					break;
 				case '1':
+					alert('Hecho');
 					window.location.replace(base_url+'inicio/index');
 					break;
 				case '2':
@@ -93,7 +94,6 @@ $('document').ready(function(){
 				case '3': alert('Existe');
 					break;
 			}
-			alert(data);
 		});
 	}
 

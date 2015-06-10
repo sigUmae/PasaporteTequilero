@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<div class="app">
+<div class="app green">
   <div class="center-block w-xxl w-auto-xs p-v-md">
     <div class="navbar">
       <div class="navbar-brand m-t-lg text-center logo-blanco">

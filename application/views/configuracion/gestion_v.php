@@ -111,7 +111,7 @@
     </div>
   </div>
   <nav>
-    <!-- ul class="nav b-t b">
+    <<!-- ul class="nav b-t b">
       <li>
         <a href=""  md-ink-ripple>
           <i class="icon mdi-action-help i-20"></i>
@@ -233,7 +233,12 @@
                                 <input name="contrasena" type="password" class="contrasena-<?php echo $value->id; ?> contrasena" value="<?php echo $value->contrasena; ?>">
                               </td>
                               <td>
-                                <button value="frm-<?php echo $value->id; ?>" type="submit" md-ink-ripple="" class="btn-<?php echo $value->id; ?> btn-guardar btn btn-fw btn-success waves-effect waves-effect">Guardar</button>
+                                <button value="frm-<?php echo $value->id; ?>" 
+                                        type="submit" 
+                                        md-ink-ripple="" 
+                                        class="btn-<?php echo $value->id; ?> btn-guardar btn btn-fw btn-success waves-effect waves-effect">
+                                        Guardar
+                                </button>
                                 <button type="button" md-ink-ripple="" class="btn-eliminar btn btn-fw btn-error waves-effect waves-effect">Eliminar</button>
                               </td>
                           </tr>

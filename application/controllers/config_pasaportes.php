@@ -6,7 +6,7 @@ class Config_pasaportes extends CI_Controller {
 
         parent::__construct();
         $this->load->model(array('Inicio_m','Config_pasaporte_m'));
-        $this->load->library('My_PHPMailer');
+        $this->load->library('my_phpmailer');
         $this->load->library('Payu_lib');
 
     }
@@ -16,7 +16,7 @@ class Config_pasaportes extends CI_Controller {
         redirect('inicio/index');
 
     }
-
+    
     public function enviar_pasaporte() {
     
         $id_pasaporte = $this->input->post('id_pasaporte',true);
@@ -24,7 +24,7 @@ class Config_pasaportes extends CI_Controller {
         if ($id_pasaporte and $ajax_request) {
             $info_compra = $this->Master_m->filas_condicion('info_compra',array('id_pasaporte' => $id_pasaporte));
             $info_msj = array(
-                'dominio' => 'no-reply@tequila.mx', 
+                'dominio' => 'no-replay@pasaportetequilero.mx',
                 'origen' => 'Hacienda Pasaporte tequila', 
                 'asunto' => 'Pasaporte', 
                 'texto' => 'ID virtual: '.$info_compra[0]->id_pasaporte. ' ID físico: '.$info_compra[0]->id_fisico,
@@ -269,7 +269,9 @@ class Config_pasaportes extends CI_Controller {
                     ));  
                     $id_hacienda = $id_hacienda[0]->id_hacienda;
                     $hacienda = array('1' => 'sauza','2' => 'herradura', '3' => 'cofradia');
-                    $valid['pasaportes'] = $this->Master_m->filas_condicion('info_compra',array('status' => '1','tipo_pago' => 'Pagado',$hacienda[$id_hacienda].' !=' =>'1'));
+                    //$hacienda[$id_hacienda].' !=' =>'1')
+                    $valid['id_hacienda_v'] = $hacienda[$id_hacienda];
+                    $valid['pasaportes'] = $this->Master_m->filas_condicion('info_compra',array('status' => '1','tipo_pago' => 'Pagado'));
                     $valid['pasaportes'] = $this->visitas_($valid);
     				$this->load->view('config_pasaportes/registro_visita_v',$valid);
     				break;
@@ -385,6 +387,14 @@ class Config_pasaportes extends CI_Controller {
         $action = $this->input->get('action',true);
     	if ($valid and ($rol == 1 || $rol == 2 || $rol == 3)) {
             if ($action and $action == 'venta') {
+                $venta = $this->Config_pasaporte_m->last_id('info_compra');
+                $valid['total_id'] = '0';
+                if (!empty($venta)) {
+                    $valid['total_id'] = $venta[0]->id+1;
+                }
+                else {
+                    $valid['total_id'] = 1;
+                }
         		switch ($rol) {
                     case 1:
                         redirect('inicio/index');
@@ -404,7 +414,7 @@ class Config_pasaportes extends CI_Controller {
             else {
                 switch ($rol) {
                     case 1:
-                        $valid['pasaportes'] = $this->Master_m->filas('info_compra');
+                        $valid['pasaportes'] = $this->Master_m->filas_condicion('info_compra',array('status' => '1'));
                         $valid = $this->kit($valid);
                         $this->load->view('config_pasaportes/reportes_ventas_a_v',$valid);
                         break;
@@ -506,7 +516,7 @@ class Config_pasaportes extends CI_Controller {
                     $id_vendedor = $id_vendedor[0]->id_aliado;
                     break;
             }
-            return $this->Master_m->filas_condicion('info_compra',array($vendedor => $id_vendedor));
+            return $this->Master_m->filas_condicion('info_compra',array($vendedor => $id_vendedor, 'status' => '1'));
         }
         else {
 
@@ -586,20 +596,13 @@ class Config_pasaportes extends CI_Controller {
         $domicilio = $this->input->post('domicilio',true);
         $fisico = $this->input->post('fisico',true);
     	$id_fisico = $this->input->post('id_fisico',true);
+    	$referencia_on = $this->input->post('referencia_on',true);
+        $referencia = $this->input->post('referencia',true);
+    	$submit_id = $this->input->post('submit_id',true);
         $ajax_request =  $this->input->is_ajax_request();
 
-        // print_r($this->input->post()); exit();
-
-        // $dni = $this->input->post('dni',true);
-        // $ciudad = $this->input->post('ciudad',true);
-        // $estado = $this->input->post('estado',true);
-        // $pais = $this->input->post('pais',true);
-        // $cp = $this->input->post('cp',true);
-        // $num_tarjeta = $this->input->post('num_tarjeta',true);
-        // $r_num_tarjeta = $this->input->post('r_num_tarjeta',true);
-        // $f_expiracion_input = $this->input->post('f_expiracion_input',true);
-        // $c_seguridad = $this->input->post('c_seguridad',true);
-        // $tarjeta = $this->input->post('tarjeta',true);
+        // print_r($this->input->post('submit')); exit();
+         // print_r('_frm_'.$submit_id); exit();
     	
         if ($ajax_request and 
             $vendedor and
@@ -607,170 +610,76 @@ class Config_pasaportes extends CI_Controller {
             $propietario and 
             $pago and $fisico ) {
 
-            $this->form_validation->set_rules('id_pasaporte','ID pasaporte','required|integer|is_unique[info_compra.id]');
-            $this->form_validation->set_rules('vendedor','hacienda/aliado','required');
-            // $this->form_validation->set_rules('n-vendedor','vendedor','required');
-            $this->form_validation->set_rules('propietario','propietario','required|min_length[4]|max_length[128]');
-            $this->form_validation->set_rules('pago','pago','required|integer');
-            $this->form_validation->set_rules('telefono','teléfono','integer');
-            $this->form_validation->set_rules('correo','correo','required|is_unique[info_compra.correo]|valid_email');
-            if ($fisico == '1') {
-                $this->form_validation->set_rules('id_fisico','ID pasaporte físico','required|is_unique[info_compra.id_fisico]');
-            }
-            // if ($pago == '1') { // efectivo
-            //     $this->form_validation->set_rules('telefono','Teléfono','integer');
-            //     $this->form_validation->set_rules('correo','Correo','is_unique[info_compra.correo]|valid_email');
-            // }
-            // else if($pago == '2') { // tarjeta
-            //     if ($dni and
-            //         $ciudad and
-            //         $estado and
-            //         $pais and
-            //         $cp and
-            //         $num_tarjeta and
-            //         // $r_num_tarjeta and
-            //         $f_expiracion_input and
-            //         $c_seguridad and
-            //         $tarjeta) {
-            //         $this->form_validation->set_rules('telefono','Teléfono','required|integer');
-            //         $this->form_validation->set_rules('correo','Correo','required|is_unique[info_compra.correo]|valid_email');
-            //         $this->form_validation->set_rules('domicilio','Domicilio','required');
-            //         $this->form_validation->set_rules('dni','DNI','required');
-            //         $this->form_validation->set_rules('ciudad','Ciudad','required');
-            //         $this->form_validation->set_rules('estado','Estado','required');
-            //         $this->form_validation->set_rules('pais','País','required');
-            //         $this->form_validation->set_rules('cp','Código Postal','required|integer'); // pendiente
-            //         $this->form_validation->set_rules('num_tarjeta','Número de tajeta','required|integer'); // pendiente
-            //         // $this->form_validation->set_rules('r_num_tarjeta','Repetir número de tajeta','required'); // pendiente
-            //         // $this->form_validation->set_rules('fecha_e_i','Fecha de expiración','required');
-            //     } 
-            //     else {
-            //         echo 'Error';
-            //         exit();
-            //     }
-            // }
-            // else {
-            //     echo 'Tipo de pago no válido';
-            //     exit();
-            // }
-            
-            $this->form_validation->set_error_delimiters('','');
-            
-            if ($this->form_validation->run() == false) {
-                echo validation_errors();
+            if ($this->input->post('submit') == 'frm-'.$submit_id) { 
+
+                $this->form_validation->set_rules('id_pasaporte','ID pasaporte','required|integer|is_unique[info_compra.id]');
+                $this->form_validation->set_rules('vendedor','hacienda/aliado','required');
+                $this->form_validation->set_rules('propietario','propietario','required|min_length[4]|max_length[128]');
+                $this->form_validation->set_rules('pago','pago','required|integer');
+                $this->form_validation->set_rules('telefono','teléfono','integer');
+                $this->form_validation->set_rules('correo','correo','required|valid_email');
+                
+                if ($fisico == '1') {
+                    $this->form_validation->set_rules('id_fisico','ID pasaporte físico','required|is_unique[info_compra.id_fisico]');
+                }
+                if ($referencia_on== '1') {
+                    $this->form_validation->set_rules('referencia','número de referencia','required|integer|is_unique[info_compra.referencia]');
+                }
+                
+                $this->form_validation->set_error_delimiters('','');
+                
+                if ($this->form_validation->run() == false) {
+                    echo validation_errors();
+                }
+                else {
+                    $existe = $this->Master_m->filas_condicion($n_vendedor,array($n_vendedor => $vendedor));
+                    if (!empty($existe)) {
+                        $numero = rand();
+                        $id_pasaporte = md5($numero);
+                        // $pa = '1';
+                        $pago_ = array('1' => 'Pagado', '2' => 'Pagado');
+                        $this->Master_m->insert('info_compra',array(
+                            'propietario' => $propietario,
+                            'id_'.$n_vendedor => $existe[0]->id,
+                            'tipo_pago' => $pago_[$pago],
+                            'telefono' => $telefono,
+                            'correo' => $correo,
+                            'domicilio' => $domicilio,
+                            'id_pasaporte' => $id_pasaporte,
+                            'vendedor' => $vendedor,
+                            'efectivo_tarjeta' => $pago,
+                            'id_fisico' => $id_fisico,
+                            'referencia' => $referencia
+                        ));
+                        $mensaje = array(
+                            'no' => 'Su compra ha sido realizada con el pasaporte ID provisional: '.$numero.' Pasaporte virtual: '.base_url().'pasaporte_virtual/acceso?id='.$id_pasaporte,
+                            '1' => 'Su compra ha sido realizada con el pasaporte ID: '.$id_fisico.' Pasaporte virtual: '.base_url().'pasaporte_virtual/acceso?id='.$id_pasaporte
+                        );
+                        $info_msj = array(
+                            'dominio' => 'no-replay@pasaportetequilero.mx',
+                            'origen' => 'Hacienda Pasaporte tequila', 
+                            'asunto' => 'Compra pasaporte tequilero', 
+                            'texto' => $mensaje[$fisico],
+                            'destino' => $correo,
+                            'usuario' => $propietario
+                        );
+                         $enviado = $this->enviar_msj($info_msj);
+                        if (!$enviado) {
+                            echo 'Correo enviado - '; // Success  
+                        }
+                        else {
+                           print_r ('Error al enviar correo: '.$enviado); // Error al enviar
+                        }
+                       echo 'Hecho';
+                    } 
+                    else {
+                        echo 'Vendedor no registrado'; // no existe vendedor  
+                    }
+                }
             }
             else {
-                $existe = $this->Master_m->filas_condicion($n_vendedor,array($n_vendedor => $vendedor));
-                if (!empty($existe)) {
-                    $numero = rand();
-                    $id_pasaporte = md5($numero);
-                    $pa = '1';
-                    // if ($pago == '2') {
-                    //     $this->init(true);
-                    //     $response = PayUPayments::doPing();
-                    //     if ($response->code == 'SUCCESS') {
-                    //         // 260 VISA
-                    //         // 261 MASTERCARD
-                    //         $paymentMethods = array('1' => '260', '2' => '261');
-                    //         $valido = $this->metodos_pago_activos($paymentMethods[$tarjeta]);
-                    //         if ($valido) {
-                    //             $referencia = md5(date("Y-m-d H:i:s").$id_pasaporte);
-                    //             $datos = array(
-                    //                 'buyer_name' => $propietario,
-                    //                 'buyer_email' => $correo,
-                    //                 'telefono' => $telefono,
-                    //                 'dni' => $dni,
-                    //                 'domicilio' => $domicilio,
-                    //                 'ciudad' => $ciudad,
-                    //                 'estado' => $estado,
-                    //                 'pais' => 'MX',
-                    //                 'cp' => $cp,
-                    //                 'telefono' => $telefono,
-                    //                 'num_tarjeta' => $num_tarjeta,
-                    //                 'f_expiracion_input' => $f_expiracion_input,
-                    //                 'c_seguridad' => $c_seguridad,
-                    //                 'tarjeta' => $tarjeta,
-                    //                 'referencia' => $referencia
-                    //             );
-                    //             $response = $this->pay_payu($datos);
-                    //             if ($response->code == 'SUCCESS') {
-                    //                 $info_venta = array();
-                    //                 $state = $response->transactionResponse->state;
-                    //                 switch ($state) {
-                    //                     case 'DECLINED':
-                    //                     case 'EXPIRED':
-                    //                     case 'ERROR':
-                    //                         print_r($response->transactionResponse->responseCode.' -');
-                    //                         print_r($response->transactionResponse->responseMessage);
-                    //                         exit();
-                    //                         break;
-                    //                     case 'PENDING':        
-                    //                         print_r($response->transactionResponse->pendingReason.' - ');
-                    //                         $pa = '2';
-                    //                         break;
-                    //                     case 'APPROVED':
-                    //                         $pa = '1';
-                    //                         break;
-                    //                 }
-                    //                 $info_venta = array(
-                    //                     'order_id' =>  $response->transactionResponse->orderId,
-                    //                     'transaction_id' =>  $response->transactionResponse->transactionId,
-                    //                     'id_pasaporte' =>  $id_pasaporte,
-                    //                     'referencia' =>  $referencia
-                    //                 );
-                    //                 $this->Master_m->insert('info_tarjeta',$info_venta);
-                    //            } 
-                    //             else {
-                    //                 echo 'Error con la tarjeta';
-                    //             }
-                    //         } 
-                    //         else {
-                    //             echo 'Servicio de pago de tarjeta PayU caído';
-                    //             exit();
-                    //         }
-                            
-                    //     }
-                    //     else {
-                    //         echo 'Servicio PayU caído';
-                    //         exit();
-                    //     }
-                    // }
-                    $pago_ = array('1' => 'Pagado', '2' => 'Pagado');
-                    $this->Master_m->insert('info_compra',array(
-                        'propietario' => $propietario,
-                        'id_'.$n_vendedor => $existe[0]->id,
-                        'tipo_pago' => $pago_[$pago],
-                        'telefono' => $telefono,
-                        'correo' => $correo,
-                        'domicilio' => $domicilio,
-                        'id_pasaporte' => $id_pasaporte,
-                        'vendedor' => $vendedor,
-                        'efectivo_tarjeta' => $pago,
-                        'id_fisico' => $id_fisico
-                    ));
-                    $mensaje = array(
-                        'no' => 'Su compra ha sido realizada con el pasaporte ID provisional: '.$numero,
-                        '1' => 'Su compra ha sido realizada con el pasaporte ID: '.$id_fisico,
-                    );
-                    $info_msj = array(
-                        'dominio' => 'no-reply@tequila.mx', 
-                        'origen' => 'Hacienda Pasaporte tequila', 
-                        'asunto' => 'Visita', 
-                        'texto' => $mensaje[$fisico],
-                        'destino' => $correo,
-                        'usuario' => 'Pasaporte'
-                    );
-                    $enviado = $this->enviar_msj($info_msj);
-                    if (!$enviado) {
-                        echo 'Correo enviado'; // Success  
-                    }
-                    else {
-                        echo 'Error al enviar correo'; // Error al enviar
-                    }
-                } 
-                else {
-                    echo 'Vendedor no registrado'; // no existe vendedor  
-                }
+                print_r($this->input->post('submit'));
+                echo 'Error';
             }
     	}
     	else {
@@ -830,6 +739,7 @@ class Config_pasaportes extends CI_Controller {
                     if (!empty($hacienda)) {
                         $hacienda = $hacienda[0]->hacienda;
                         $correo = $valido[0]->correo;
+                        $propietario =  $valido[0]->propietario;
                         $this->Master_m->insert('visitas',array(
                             'id_hacienda' => $id_hacienda,
                             'id_pasaporte' => $pasaporte
@@ -854,19 +764,19 @@ class Config_pasaportes extends CI_Controller {
                         if ($correo != '') {
                             $usuario = $info_usuario[0]->usuario;
                             $info_msj = array(
-                                'dominio' => 'no-reply@tequila.mx', 
+                                'dominio' => 'no-replay@pasaportetequilero.mx', 
                                 'origen' => 'Hacienda Pasaporte tequila', 
                                 'asunto' => 'Visita', 
                                 'texto' => 'Gracias por su visita a '.$hacienda, 
                                 'destino' => $correo,
-                                'usuario' => $usuario
+                                'usuario' => $propietario
                             );
                             $enviado = $this->enviar_msj($info_msj);
                             if (!$enviado) {
                                 echo 'Correo enviado'; // Success  
                             }
                             else {
-                                echo 'Error al enviar correo'; // Error al enviar
+                                print_r ('Error al enviar correo: '.$enviado); // Error al enviar
                             }
                         } 
                         else {
@@ -894,15 +804,20 @@ class Config_pasaportes extends CI_Controller {
     private function enviar_msj($info_msj) {
 
         // date_default_timezone_set('America/Mazatlan');
-        $mail = new PHPMailer();
+        //require 'PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer;
         $mail->IsSMTP(); 
         $mail->SMTPAuth   = true; 
         $mail->SMTPSecure = 'ssl';  
-        $mail->Host       = 'smtp.gmail.com';      
+        // $mail->Host       = 'pasaportetequilero.mx';     
+        $mail->Host       = 'smtp.gmail.com'; 
         $mail->Port       = 465;                   
+        // $mail->Username   = 'no-replay@pasaportetequilero.mx';  
+        // $mail->Password   = '&{p$v[9DwCO}';      
         $mail->Username   = 'pasaporte.tequila@gmail.com';  
-        $mail->Password   = 'pasaporte_tequila';            
+        $mail->Password   = 'pasaporte_tequila';
         $mail->SetFrom($info_msj['dominio'], $info_msj['origen']); 
+        $mail->From = 'no-replay@pasaportetequilero.mx';
         $mail->Subject    = $info_msj['asunto'];
         $mail->Body       = $info_msj['texto'];
         // $mail->AltBody    = $info_msj['texto'];
@@ -988,43 +903,6 @@ class Config_pasaportes extends CI_Controller {
     private function get_header() {
 		$base_url['url'] = base_url();
 		return $this->load->view('includes/header',$base_url);
-	}
-
-	private function tabla_visitas() {
-
-		$id_hacienda = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
-    	$id_hacienda = $id_hacienda[0]->id_hacienda;
-		$hacienda = $this->Master_m->filas_condicion('hacienda',array('id' => $id_hacienda));
-    	$hacienda = $hacienda[0]->hacienda;
-  		// echo $id_hacienda; exit();
-		// $pasaporte = $this->Config_pasaporte_m->estado_p_($hacienda);
-		// echo '<pre>';
-		// print_r($this->db->last_query()); exit();
-		$pasaporte = $this->Master_m->filas_condicion('info_compra',array( $hacienda.' =' => '0'));
-		// print_r($this->db->last_query()); exit();
-		$pasaporte_data = new Data_usuarios($pasaporte);
-		$path = set_realpath('').'api\datatable_reporte_.json';
-		file_put_contents($path,json_encode($pasaporte_data));
-
-	}
-
-	private function tabla_reportes() {
-
-		$pasaporte = $this->Config_pasaporte_m->estado_p();
-		$pasaporte_data = new Data_usuarios($pasaporte);
-		$path = set_realpath('').'api\datatable_reporte.json';
-		file_put_contents($path,json_encode($pasaporte_data));
-
-	}
-
-}
-
-class Data_usuarios {
-
-	public $aaData = '';
-
-	function __construct($aaData="null") {
-		$this->aaData = $aaData;
 	}
 
 }

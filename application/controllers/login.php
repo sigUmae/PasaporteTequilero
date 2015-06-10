@@ -146,7 +146,7 @@ class Login extends CI_Controller {
 				if (!empty($usuario)) {
 					$token = md5(rand());
 					$info_msj = array(
-						'dominio' => 'no-reply@tequila.mx', 
+						'dominio' => 'no-replay@pasaportetequilero.mx', 
 						'origen' => 'Administrador Pasaporte tequila', 
 						'asunto' => 'Recuperación de cuenta', 
 						'texto' => 'Para recuperar su cuenta dar click en el siguiente enlace: '.base_url().'login/nueva_contrasena?token='.$token, 
@@ -216,11 +216,12 @@ class Login extends CI_Controller {
         $mail->IsSMTP(); 
         $mail->SMTPAuth   = true; 
         $mail->SMTPSecure = 'ssl';  
-        $mail->Host       = 'smtp.gmail.com';      
+        $mail->Host       = 'pasaportetequilero.mx';      
         $mail->Port       = 465;                   
-        $mail->Username   = 'pasaporte.tequila@gmail.com';  
-        $mail->Password   = 'pasaporte_tequila';            
-        $mail->SetFrom($info_msj['dominio'], $info_msj['origen']); 
+        $mail->Username   = 'no-replay@pasaportetequilero.mx';  
+        $mail->Password   = '&{p$v[9DwCO}';            
+        $mail->SetFrom($info_msj['dominio'], $info_msj['origen']);
+        $mail->From = 'no-replay@pasaportetequilero.mx'; 
         $mail->Subject    = $info_msj['asunto'];
         $mail->Body       = $info_msj['texto'];
         // $mail->AltBody    = $info_msj['texto'];

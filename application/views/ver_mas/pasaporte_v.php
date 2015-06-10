@@ -204,7 +204,7 @@
                           <a href="<?php echo base_url('pasaporte_virtual/acceso?id=').$id?>" target="_blank">
                             <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Pasaporte virtual</button>
                           </a>
-                            <button id="enviar_pt" data-id-pasaporte="<?php echo $id; ?>" type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Enviar por correo electrónico</button>
+                           <button id="enviar_pt" data-id-pasaporte="<?php echo $id; ?>" type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Enviar pasaporte por correo</button>
                         </div>
                       </div>
                     </div>

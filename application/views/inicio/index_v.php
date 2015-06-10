@@ -143,6 +143,7 @@
               <div class="box-inner padding">
               <?php if ($admin == '1') { ?>
                 <div class="row row-xs">
+                  <div class="col-sm-2"></div>
                   <div class="col-sm-4">
                     <div class="panel panel-card">
                       <div class="p">
@@ -202,11 +203,6 @@
                           ' style="height:200px">
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="panel panel-card p m-b-sm">
-                      
                     </div>
                   </div>
                 </div>

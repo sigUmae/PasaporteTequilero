@@ -23,6 +23,7 @@ class Inicio extends CI_Controller {
 					$data['color_1'] = 'c-admin';
 					$data['color_2'] = 'c-admin-50';
 					$data['admin'] = '1';
+					// exit();
 					$total_vendidos = $this->Inicio_m->count_pasaportes(array('status' => '1','tipo_pago' => 'Pagado'),'= CURDATE()');
 					if ($total_vendidos[0]->pasaportes == '0') {
 						$obj = new stdClass();
@@ -34,14 +35,14 @@ class Inicio extends CI_Controller {
 						$vendidos = $this->count($total_vendidos[0]->pasaportes);
 						$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
 					}
-
+					// exit();
 					$semena_venta = $this->count_day('info_compra','1','AND tipo_pago = "Pagado"');
 					$semena_visita = $this->count_day('visitas');
 					$semena_kit = $this->count_days_kit('2');
 					$semena_comision = $this->fecha_comision();
 
 					// echo '<pre>';
-					// print_r($semena_venta); exit();
+					// print_r(json_encode($this->fecha_comision())); exit();
 					
 					$data['ventas'] = json_encode($vendidos);
 					$data['ventas_semana'] = json_encode($semena_venta);
@@ -62,7 +63,7 @@ class Inicio extends CI_Controller {
 					if (!empty($id_hacienda)) {
 						$id_hacienda = $id_hacienda[0]->id_hacienda;
 						$data['count'] = $this->count_dsm('hacienda',$id_hacienda);
-						$semena_venta = $this->count_day('info_compra','1','AND id_hacienda = "'.$id_hacienda.'" AND tipo_pago = "Pagado"');
+						$semena_venta = $this->count_day('info_compra','1','AND status="1" AND id_hacienda = "'.$id_hacienda.'" AND tipo_pago = "Pagado"');
 						$data['ventas_semana'] = json_encode($semena_venta);
 						$semena_visitas = $this->count_day('visitas','1','AND id_hacienda = "'.$id_hacienda.'"');
 						$data['semana_visitas'] = json_encode($semena_visitas);
@@ -70,8 +71,6 @@ class Inicio extends CI_Controller {
 						$data['semena_kit'] = json_encode($semena_kit);
 						$semana_comision = $this->count_days_comision('hacienda',$id_hacienda);
 						$data['semana_comision'] = json_encode($semana_comision);
-						// echo '<pre>';
-						// print_r($this->db->last_query()); exit();
 					}
 					else {
 						$this->session->sess_destroy();
@@ -143,8 +142,6 @@ class Inicio extends CI_Controller {
 			'id_'.$vendedor => $id_vendedor
 		),'>= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND DATE(FECHA) != CURDATE()');
 		$count['total_v_mes'] = $total_vendidos[0]->pasaportes;
-		// echo '<pre>';
-		// print_r($count['total_v_mes']); exit();
 		return $count;
 	}
 

@@ -57,10 +57,4 @@ class Pasaporte_virtual extends CI_Controller {
 
     }
 
-    public function enviar_pasaporte() {
-    
-        
-        
-    }
-
 }
