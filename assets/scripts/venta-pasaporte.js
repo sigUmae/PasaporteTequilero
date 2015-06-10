@@ -27,28 +27,36 @@ $('document').ready(function(){
 		var obj = {
 			'id_pasaporte': $('#id_pasaporte').val(),
 			'vendedor': $('#vendedor').val(),
-			'elegir': $('#elegir').val(),
 			'propietario': $('#propietario').val(),
 			'pago': $('#pago').val(),
 			'telefono': $('#telefono').val(),
 			'correo': $('#correo').val(),
 			'domicilio': $('#domicilio').val(),
 			'n-vendedor': $('#n-vendedor').text().toLowerCase(),
-			'dni': $('#dni').val(),
-			'ciudad': $('#ciudad').val(),
-			'estado': $('#estado').val(),
-			'pais': $('#pais').val(),
-			'cp': $('#cp').val(),
-			'num_tarjeta': $('#num-tarjeta').val(),
+			'fisico': 'no',
+			'id_fisico': '0'
+			// 'dni': $('#dni').val(),
+			// 'ciudad': $('#ciudad').val(),
+			// 'estado': $('#estado').val(),
+			// 'pais': $('#pais').val(),
+			// 'cp': $('#cp').val(),
+			// 'num_tarjeta': $('#num-tarjeta').val(),
 			// 'r_num_tarjeta': $('#r-num-tarjeta').val(),
-			'f_expiracion_input': $('#f-expiracion-i').val(),
-			'c_seguridad': $('#c-seguridad').val(),
-			'tarjeta': $('#tarjeta').val()
+			// 'f_expiracion_input': $('#f-expiracion-i').val(),
+			// 'c_seguridad': $('#c-seguridad').val(),
+			// 'tarjeta': $('#tarjeta').val()
 		};
+		if($('#fisico').is(':checked')) {
+			obj['fisico'] = '1';
+			obj['id_fisico'] = $('#id_fisico').val();
+		}
+		else {
+			obj['fisico'] = 'no';
+			obj['id_fisico'] = '0';
+		}
 		var results = ajax('post',base_url+'config_pasaportes/realizar_venta',false,obj);
 		results.success(function(data){
 			alert(data);
-			// $('#contain-frm').html(data);
 			respuesta = data;
 		});
 		return respuesta;
@@ -75,21 +83,39 @@ $('document').ready(function(){
 
 	// eventos
 
-	$('#pago').on('change',function(){
-		elementos_tc($(this).val());
+	$('#virtual').on('change',function(){
+
+		if(this.checked) {
+			$('#fisico_input').addClass('no-display').find('input').removeAttr('required');
+		}
+
 	});
 
-	$('#frm-venta-a').on('submit',function(){
+	$('#fisico').on('change',function(){
+
+		if(this.checked) {
+			$('#fisico_input').removeClass('no-display').find('input').attr('required',true);
+		}
+
+	});
+
+	$('#pago').on('change',function(){
+		// elementos_tc($(this).val());
+	});
+
+	$('#frm-venta-a').on('submit',function(e){
+		e.preventDefault();
 		var respuesta = venta();
-		if (str.indexOf('Hecho') >= 0) {
+		if (respuesta.indexOf('Correo') >= 0) {
 			window.location.replace(base_url+'config_pasaportes/ventas');
 		}
-		return false;
 	});
 
 	$('#f_expiracion').datetimepicker({
 		format: 'YYYY/MM'
 	});
+
+	$('#virtual').prop('checked',true);
 	
 	id_pasaporte();
 

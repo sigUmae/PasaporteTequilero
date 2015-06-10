@@ -74,6 +74,15 @@ class Inicio_m extends CI_Model {
         }
     }
 
+    public function count_web($fecha='= CURDATE()') {
+    
+      return $this->db
+        ->select('count(info_compra.id_web) AS data')
+        ->where('DATE(fecha) '.$fecha.' AND status ="1" AND id_web="1"')
+        ->get('info_compra')
+        ->result();
+    }
+
     public function count_by_vendedor($vendedor=false,$fecha='= CURDATE()') {
       if ($vendedor) {
         return $this->db

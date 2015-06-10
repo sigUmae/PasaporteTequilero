@@ -489,7 +489,7 @@
                       </div>
                     </div>
                   </div>
-              <?php } else if ($admin == '3') { ?>
+              <?php } else if ($admin == '3' and $activador == '0') { ?>
                 <div class="row row-xs">
                   <div class="col-sm-4">
                     <div class="panel panel-card">

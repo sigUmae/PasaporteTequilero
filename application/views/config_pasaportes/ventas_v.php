@@ -178,11 +178,23 @@
                             <label id="n-vendedor"><?php echo $vendedor;?></label>
                           </div>
                         </div>
+                        <div class="col-sm-2">
+                          <?php if ($vendedor == 'Hacienda') { ?>
+                          <div class="md-form-group">
+                            <label class="radio-inline">
+                              <input type="radio" name="inlineRadioOptions" id="virtual" value="virtual"> Virtual
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="inlineRadioOptions" id="fisico" value="fisico"> Físico
+                            </label>
+                          </div>
+                          <?php } ?>
+                        </div>
                       </div>
                     </div>
                     <div class="card-body">
                       <div class="row row-sm">
-                        <div class="col-sm-4">
+                        <div class="col-sm-8">
                           <div class="md-form-group">
                             <input id="propietario" name="propietario" class="md-input md-input" type="text" required>
                             <label>Propietario</label>
@@ -195,8 +207,24 @@
                             <select id="pago" name="pago" class="form-control select" required>
                               <option value="">Seleccionar...</option>
                               <option value="1">Efectivo</option>
-                              <option value="2">Tarjeta de crédito</option>
+                              <option value="2">Tarjeta de crédito/debito</option>
                             </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-sm">
+                        <?php if ($vendedor == 'Hacienda') { ?>
+                          <div id="fisico_input" class="col-sm-4 no-display">
+                            <div class="md-form-group">
+                              <input id="id_fisico" name="fisico" class="md-input md-input" type="text">
+                              <label>ID pasaporte físico</label>
+                            </div>
+                          </div>
+                        <?php } ?>
+                        <div class="col-sm-4">
+                          <div class="md-form-group">
+                            <input id="correo" name="correo" class="md-input md-input" type="email">
+                            <label>Correo electrónico</label>
                           </div>
                         </div>
                         <div class="col-sm-4">
@@ -205,13 +233,7 @@
                             <label>Teléfono</label>
                           </div>
                         </div>
-                        <div class="col-sm-4">
-                          <div class="md-form-group">
-                            <input id="correo" name="correo" class="md-input md-input" type="email">
-                            <label>Correo</label>
-                          </div>
-                        </div>
-                         <div class="col-sm-8">
+                         <div class="col-sm-12">
                           <div class="md-form-group">
                             <input id="domicilio" name="domicilio" class="md-input md-input" type="text">
                             <label>Domicilio</label>

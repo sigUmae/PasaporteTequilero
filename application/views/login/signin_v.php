@@ -22,7 +22,7 @@
       <form method="post" name="form" id="frm-login">
         <div class="md-form-group">
           <input id="usuario" type="text" class="md-input" ng-model="user.email" required>
-          <label>Usuario o correo</label>
+          <label>Usuario o correo electrónico</label>
         </div>
         <div class="md-form-group">
           <input id="contrasena" type="password" class="md-input" ng-model="user.password" required>

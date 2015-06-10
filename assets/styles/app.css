@@ -6186,7 +6186,7 @@ a.text-dark:hover {
 }
 
 .logo-blanco {
-  background-image: url('/pasaportetequilero/logo-min.png');
+  background-image: url('../../logo-min.png');
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;

@@ -190,7 +190,7 @@
                             <th data-hide="phone">Todos</th>
                             <th>Efectivo</th>
                             <th>Tarjeta</th>
-                            <th>Comosión no pagada/cobrada</th>
+                            <th>Comisión no pagada/cobrada</th>
                             <th>Acción</th>
                           </tr>
                         </thead>

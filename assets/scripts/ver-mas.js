@@ -78,6 +78,18 @@ $('document').ready(function(){
 		});
 	}
 
+	$('#enviar_pt').on('click',function(){
+
+		var obj = {
+			'id_pasaporte': $(this).data('id-pasaporte')
+		}
+		var result = ajax('post',base_url+'config_pasaportes/enviar_pasaporte',true,obj);
+		result.success(function(data){
+			alert(data);
+		});
+
+	});
+
 	tool_v();
 
 	$('.tooltip').css('opacity','1');

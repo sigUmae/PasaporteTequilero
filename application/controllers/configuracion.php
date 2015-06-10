@@ -11,6 +11,64 @@ class Configuracion extends CI_Controller {
 
     } 
 
+    public function eliminar() {
+    
+        $id_usuario = $this->input->post('id_usuario',true);
+        $ajax_request = $this->input->is_ajax_request();
+        if ($id_usuario and $ajax_request) {
+            $this->Master_m->update('usuarios',array('status' => '0'),array('id' => $id_usuario));
+            echo 'Hecho';
+        }
+        
+    }
+
+    public function guardar() {
+    
+        $id_usuario = $this->input->post('id_usuario',true);
+        $usuario = $this->input->post('usuario',true);
+        $correo = $this->input->post('correo',true);
+        $contrasena = $this->input->post('contrasena',true);
+        $c_usuario = $this->input->post('c_usuario',true);
+        $c_correo = $this->input->post('c_correo',true);
+        $c_contrasena = $this->input->post('c_contrasena',true);
+        $ajax_request = $this->input->is_ajax_request();
+        if ($id_usuario and $usuario and $correo and $contrasena and $ajax_request) {
+            if ($this->input->post('submit') == 'frm-'.$id_usuario) {
+                if ($c_usuario == '1') {
+                    $this->form_validation->set_rules('usuario','usuario','required|is_unique[usuarios.usuario]|min_length[4]|max_length[32]');    
+                }
+                if ($c_correo == '1') {
+                    $this->form_validation->set_rules('correo','correo','required|is_unique[usuarios.correo]|max_length[128]|valid_email');
+                }
+                if ($c_contrasena == '1') {
+                    $this->form_validation->set_rules('contrasena','contraseña','required|min_length[6]|max_length[128]|md5');
+                }
+                $this->form_validation->set_error_delimiters('','');
+                if ($this->form_validation->run() == false) {
+                    echo validation_errors();
+                }
+                else {
+                    $data = array();
+                    if ($c_usuario == '1') {
+                        $data['usuario'] = $usuario;
+                    }
+                    if ($c_correo == '1') {
+                        $data['correo'] = $correo;
+                    }
+                    if ($c_contrasena == '1') {
+                        $data['contrasena'] = md5($contrasena);
+                    }
+                    $this->Master_m->update('usuarios',$data,array('id' => $id_usuario));
+                    echo 'Hecho';
+                }
+            }
+        }
+        else {
+            echo 'Error';
+        }
+        
+    }
+
     public function usuarios() {
     
     	$get = $this->input->get('action',true);
@@ -22,6 +80,7 @@ class Configuracion extends CI_Controller {
 	   					$this->load->view('configuracion/alta_v',$valido);
 	   					break;
 	   				case 'gestion':
+                        $valido['usuarios'] = $this->Master_m->filas_condicion('usuarios',array('status' => '1', 'id_rol !=' => '1'));
 	   					$this->load->view('configuracion/gestion_v',$valido);
 	   					break;
 	   				default:
@@ -93,10 +152,11 @@ class Configuracion extends CI_Controller {
 		$contrasena = $this->input->post('contrasena',true);
 		$correo = $this->input->post('correo',true);
 		$elegir = $this->input->post('elegir',true);
-		$h_a = $this->input->post('h-a',true);
+        $h_a = $this->input->post('h-a',true);
+		$tipo = $this->input->post('tipo',true);
 		$ajax_request = $this->input->is_ajax_request();
 
-		if ($usuario and $contrasena and $correo and $elegir and $h_a and $ajax_request) {
+		if ($usuario and $contrasena and $correo and $elegir and $h_a and $tipo and $ajax_request) {
 			$this->form_validation->set_rules('elegir','Vendedor','required|integer');
 			$this->form_validation->set_rules('h-a','Tipo','required');
 			$this->form_validation->set_rules('usuario','Usuario','required|is_unique[usuarios.usuario]|min_length[4]|max_length[32]');
@@ -107,40 +167,57 @@ class Configuracion extends CI_Controller {
 				echo validation_errors();
 			}
 			else { 
-				$vendedor = $this->Master_m->filas_condicion($h_a,array('id' => $elegir));
-				if (!empty($vendedor)) {
-					$data = array(
-						'usuario' => $usuario, 
-						'contrasena' => md5($contrasena), 
-						'correo' => $correo, 
-						'id_'.$h_a => $vendedor[0]->id, 
-						'id_rol' => ($h_a == 'hacienda') ? '2' : '3'
-					);
-					if ($h_a == 'hacienda') {
-						$img_hacienda = array(
-							'1' => 'haciendas-sauza.jpg',
-							'2' => 'haciendas-herradura.jpg',
-							'3' => 'haciendas-cofradia.jpg'
-						);
-						$data['avatar'] = $img_hacienda[$vendedor[0]->id];
-					}
-					$this->Master_m->insert('usuarios',$data);
-					echo 'Hecho';	// success
-				}
-				else {
-					echo 'Vendedor no encontrado'; // vendedor no encontrado
-				}
+                if ($tipo == 'aliado') {
+                    $this->Master_m->insert('aliado',array('aliado' => 'alianza_'.$usuario));
+                    $vendedor = $this->Master_m->filas_condicion('aliado',array('aliado' => 'alianza_'.$usuario));
+                    if (!empty($vendedor)) {
+                         $data = array(
+                            'usuario' => $usuario, 
+                            'contrasena' => md5($contrasena), 
+                            'correo' => $correo, 
+                            'id_'.$h_a => $vendedor[0]->id, 
+                            'id_rol' => '3'
+                        );
+                        $this->Master_m->insert('usuarios',$data);
+                        echo 'Hecho'; // success 
+                        exit();
+                    }
+                    else {
+                        echo 'Vendedor no encontrado';
+                    }
+                }
+                else {
+                    $h_a = ($h_a == 'hacienda') ? $h_a : 'aliado' ;
+                    $vendedor = $this->Master_m->filas_condicion($h_a,array('id' => $elegir));
+                    if (!empty($vendedor)) {
+                        $data = array(
+                            'usuario' => $usuario, 
+                            'contrasena' => md5($contrasena), 
+                            'correo' => $correo, 
+                            'id_'.$h_a => $vendedor[0]->id, 
+                            'id_rol' => ($h_a == 'hacienda') ? '2' : '3',
+                            'activador' => ($h_a == 'hacienda') ? '0' : '1',
+                        );
+                        if ($h_a == 'hacienda') {
+                            $img_hacienda = array(
+                                '1' => 'haciendas-sauza.jpg',
+                                '2' => 'haciendas-herradura.jpg',
+                                '3' => 'haciendas-cofradia.jpg'
+                            );
+                            $data['avatar'] = $img_hacienda[$vendedor[0]->id];
+                        }
+                        $this->Master_m->insert('usuarios',$data);
+                        echo 'Hecho';   // success
+                    }
+                    else {
+                        echo 'Vendedor no encontrado'; // vendedor no encontrado
+                    }
+                }
 			}
 		}
 		else {
 			echo 'Error'; // error
 		}
-    	
-    }
-
-    public function gestion() {
-    
-    	
     	
     }
 

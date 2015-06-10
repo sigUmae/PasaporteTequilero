@@ -65,6 +65,7 @@ $('document').ready(function(){
 				case '0': alert('Error');
 					break;
 				case '1':
+					alert('Se ha enviado un correo con instrucciones para recuperar la cuenta');
 					window.location.replace(base_url+'login/index');
 					break;
 				case '2':

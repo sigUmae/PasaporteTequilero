@@ -10,7 +10,6 @@ class Inicio extends CI_Controller {
 	public function index() {
 
 		if ($this->session->userdata('login')) {
-			// $this->table_usuarios();
 			$data['rol'] = $this->Inicio_m->get_rol($this->session->userdata('id_usuario'));
 			$data['avatar'] = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
 			$data['avatar'] = $data['avatar'][0]->avatar;
@@ -42,7 +41,7 @@ class Inicio extends CI_Controller {
 					$semena_comision = $this->fecha_comision();
 
 					// echo '<pre>';
-					// print_r(json_encode($this->fecha_comision())); exit();
+					// print_r($semena_venta); exit();
 					
 					$data['ventas'] = json_encode($vendidos);
 					$data['ventas_semana'] = json_encode($semena_venta);
@@ -81,6 +80,8 @@ class Inicio extends CI_Controller {
 
 					break;
 				case '3':
+					$usuario = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
+					$data['activador'] = $usuario[0]->activador;
 					$data['admin'] = '3';
 					$data['color_1'] = 'c-aliado';
 					$data['color_2'] = 'c-aliado-50';
@@ -91,8 +92,6 @@ class Inicio extends CI_Controller {
 					if (!empty($id_aliado)) {
 						$id_aliado = $id_aliado[0]->id_aliado;
 						$data['count'] = $this->count_dsm('aliado',$id_aliado);
-						// echo '<pre>';
-						// print_r($data['count']); exit();
 					}
 
 					break;
@@ -202,7 +201,12 @@ class Inicio extends CI_Controller {
 	
 		$vendidos = $this->Inicio_m->count_by_vendedor('hacienda');
 		$vendidos_a = $this->Inicio_m->count_by_vendedor('aliado');	
+		$vendidos_web = $this->Inicio_m->count_web();	
 		foreach ($vendidos_a as $value) {
+			$vendidos[] = $value;
+		}
+		foreach ($vendidos_web as $key => $value) {
+			$value->label = 'Web';
 			$vendidos[] = $value;
 		}
 		foreach ($vendidos as $key => $value) {

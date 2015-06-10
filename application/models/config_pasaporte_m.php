@@ -30,6 +30,17 @@ class Config_pasaporte_m extends CI_Model {
         
     }
 
+    public function ya_visitada($id_hacienda) {
+    
+        return $this->db
+            ->select('info_compra.*')
+            ->join('visitas','visitas.id_pasaporte = info_compra.id_pasaporte AND visitas.id_hacienda != "'.$id_hacienda.'"','right')
+            ->where('info_compra.tipo_pago = "Pagado" AND info_compra.status="1"')
+            ->group_by('info_compra.id')
+            ->get('info_compra')
+            ->result();
+    }
+
 // SELECT hacienda.hacienda, count(info_compra.id)*50 as comision 
 // FROM info_compra 
 // JOIN hacienda 

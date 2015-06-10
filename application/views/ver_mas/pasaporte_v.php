@@ -164,7 +164,7 @@
             <div class="box-cell">
               <div class="box-inner padding">
                 <div class="row">
-                  <div class="col-md-12">
+                  <!-- <div class="col-md-12"> -->
                     <!-- <div class="panel p"> -->
                     <div class="col-md-4">
                       <div class="panel p">
@@ -174,7 +174,7 @@
                       </div>
                     </div>
                     <!-- </div> -->
-                  </div>
+                  <!-- </div> -->
                 </div>
                 <div class="row">
                   <div class="col-md-4">
@@ -200,10 +200,11 @@
                           <h3 class="text-md">Fecha de activación:</h3>
                           <small class="font-thin"><?php echo $info_pasaporte->fecha_activacion;?></small>
                         </div>
-                        <div class="md-list-item-content">
-                          <a href="<?php echo base_url('pasaporte_virtual/acceso?id=').$id?>">
+                        <div class="md-list-item-content" style="text-align: center">
+                          <a href="<?php echo base_url('pasaporte_virtual/acceso?id=').$id?>" target="_blank">
                             <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Pasaporte virtual</button>
                           </a>
+                            <button id="enviar_pt" data-id-pasaporte="<?php echo $id; ?>" type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Enviar por correo electrónico</button>
                         </div>
                       </div>
                     </div>

@@ -1,6 +1,5 @@
 <?php echo $header; ?>
     <div class="app">
-      <!-- aside -->
       <aside id="aside" class="app-aside modal fade " role="menu">
         <div class="left">
           <div class="box bg-white">
