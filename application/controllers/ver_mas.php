@@ -26,6 +26,49 @@ class Ver_mas extends CI_Controller {
 
 	}
 
+   public function cambiar_correo() {
+   
+      $id_pasaporte = $this->input->post('id_pasaporte',true);
+      $correo = $this->input->post('correo',true);
+      $ajax_request = $this->input->is_ajax_request();
+      if ($id_pasaporte and $correo and $ajax_request) {
+         $this->form_validation->set_rules('correo','correo','required|valid_email');
+         $this->form_validation->set_error_delimiters('','');
+         if ($this->form_validation->run() == false) {
+            echo validation_errors();
+         }
+         else {
+            $existe = $this->Master_m->filas_condicion('info_compra',array('id_pasaporte' => $id_pasaporte));
+            if (!empty($existe)) {
+               $this->Master_m->update('info_compra',array('correo' => $correo),array('id_pasaporte' => $id_pasaporte));
+               echo 'Hecho';
+               // $info_msj = array(
+               //     'dominio' => 'no-replay@pasaportetequilero.mx',
+               //     'origen' => 'Hacienda Pasaporte tequila', 
+               //     'asunto' => 'Pasaporte', 
+               //     'texto' => 'ID virtual: '.$info_compra[0]->id_pasaporte. ' ID físico: '.$info_compra[0]->id_fisico,
+               //     'destino' => $info_compra[0]->correo,
+               //     'usuario' => $info_compra[0]->propietario
+               // );
+               // $enviado = $this->enviar_msj($info_msj);
+               // if (!$enviado) {
+               //     echo 'Pasaporte enviado'; // Success  
+               // }
+               // else {
+               //     echo 'Error al enviar pasaporte'; // Error al enviar
+               // }
+            }
+            else {
+               echo 'Pasaporte no encontrado';
+            }
+         }
+      }
+      else {
+         echo 'Error';
+      }
+      
+   }
+
 	private function pasaporte($id_pasaporte) {
 
 		$haciendas = $this->Master_m->filas('hacienda');

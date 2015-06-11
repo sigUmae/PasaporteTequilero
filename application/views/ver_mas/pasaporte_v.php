@@ -110,21 +110,13 @@
           </div>
         </div>
       </aside>
-      <!-- / aside -->
-      <!-- content -->
       <div id="content" class="app-content" role="main">
         <div class="box">
-          <!-- Content Navbar -->
           <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
-            <!-- Open side - Naviation on mobile -->
             <a md-ink-ripple  data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm">
               <i class="mdi-navigation-menu i-24"></i>
             </a>
-            <!-- / -->
-            <!-- Page title - Bind to $state's title -->
             <div class="navbar-item pull-left h4">Pasaporte tequilero - <?php echo $rol; ?></div>
-            <!-- / -->
-            <!-- Common tools -->
             <ul class="nav navbar-tool pull-right">
               <li class="dropdown">
                 <a md-ink-ripple data-toggle="dropdown">
@@ -140,16 +132,12 @@
               </li>
             </ul>
             <div class="pull-right" ui-view="navbar@"></div>
-            <!-- / -->
-            <!-- Search form -->
             <div id="search" class="pos-abt w-full h-full indigo hide">
               <div class="box">
                 <div class="box-col w-56 text-center">
-                  <!-- hide search form -->
                   <a md-ink-ripple class="navbar-item inline"  ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
                 </div>
                 <div class="box-col v-m">
-                  <!-- bind to app.search.content -->
                   <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
                 </div>
                 <div class="box-col w-56 text-center">
@@ -157,15 +145,11 @@
                 </div>
               </div>
             </div>
-            <!-- / -->
           </div>
-          <!-- Content -->
           <div class="box-row">
             <div class="box-cell">
               <div class="box-inner padding">
                 <div class="row">
-                  <!-- <div class="col-md-12"> -->
-                    <!-- <div class="panel p"> -->
                     <div class="col-md-4">
                       <div class="panel p">
                         <div class="item">
@@ -173,8 +157,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- </div> -->
-                  <!-- </div> -->
                 </div>
                 <div class="row">
                   <div class="col-md-4">
@@ -193,12 +175,21 @@
                           <small class="font-thin"><?php echo $info_pasaporte->fecha;?></small>
                         </div>
                         <div class="md-list-item-content">
-                          <h3 class="text-md">Tipo de pago:</h3>
+                          <h3 class="text-md">Estado:</h3>
                           <small class="font-thin"><?php echo $info_pasaporte->tipo_pago;?></small>
                         </div>
                         <div class="md-list-item-content">
-                          <h3 class="text-md">Fecha de activación:</h3>
-                          <small class="font-thin"><?php echo $info_pasaporte->fecha_activacion;?></small>
+                          <h3 class="text-md">Correo electrónico:</h3>
+                          <form id="frm-cambiar-correo" action="" method="post">
+                            <input id="correo" name="correo" type="email" required value="<?php echo $info_pasaporte->correo; ?>">
+                            <span id="mod_correo" 
+                                  data-id-pasaporte="<?php echo (isset($_GET['pasaporte']) and !empty($_GET['pasaporte'])) ? $_GET['pasaporte'] : '0' ; ?>" 
+                                  style="cursor: pointer" 
+                                  class="label green" 
+                                  title="Modificar">Modificar
+                            </span>
+                            <button style="display: none" id="submit-btn" type="submit"></button>
+                          </form>
                         </div>
                         <div class="md-list-item-content" style="text-align: center">
                           <a href="<?php echo base_url('pasaporte_virtual/acceso?id=').$id?>" target="_blank">

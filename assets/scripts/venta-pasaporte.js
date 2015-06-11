@@ -3,6 +3,7 @@ $('document').ready(function(){
 	// variables
 
 	var id_p = $('#first_p');
+	$body = $("body");
 
 	// funciones
 
@@ -53,13 +54,37 @@ $('document').ready(function(){
 			obj['referencia'] = frm.find('.num_referencia').val();
 			obj['referencia_on'] = '1';
 		}
-		// console.log(obj);
-		var results = ajax('post',base_url+'config_pasaportes/realizar_venta',false,obj);
-		results.success(function(data){
-			alert(data);
-			respuesta = data;
-		});
-		return respuesta;
+		$.ajax({
+			type: 'post',
+			url: base_url+'config_pasaportes/realizar_venta',
+			async: true,
+			data: obj,
+		   beforeSend: function(){
+		   	$body.addClass('loading');
+		   },
+		   success: function(data){
+		   	$body.removeClass('loading');
+		   	alert(data);
+		   	if (data.indexOf('Hecho') >= 0) {
+					if ($('form').length == 1) {
+						window.location.replace(base_url+'config_pasaportes/ventas');
+					} 
+					else{
+						$('#frm-'+id_pasaporte_n).remove();
+					}
+				}
+		   }
+		   // ......
+		 });
+		// var results = ajax('post',base_url+'config_pasaportes/realizar_venta',true,obj);
+		// results.beforeSend(function(data){
+		// 	alert('text')
+		// });
+		// results.success(function(data){
+		// 	alert(data);
+		// 	// respuesta = data;
+		// });
+		// return respuesta;
 	}
 
 	function elementos_tc(value,id_pasaporte_n) {
@@ -94,7 +119,6 @@ $('document').ready(function(){
 		if(this.checked) {
 			var id_pasaporte_n = $(this).data('id');
 			$('#frm_'+id_pasaporte_n).find('.fisico_input').removeClass('no-display').find('input').attr('required',true);
-			// $('#fisico_input').removeClass('no-display').find('input').attr('required',true);
 		}
 
 	});
@@ -107,16 +131,15 @@ $('document').ready(function(){
 	$('.frm-venta-a').on('submit',function(e){
 		e.preventDefault();
 		var id_pasaporte_n = $(this).data('id');
-		var respuesta = venta(id_pasaporte_n);
-		if (respuesta.indexOf('Hecho') >= 0) {
-			if ($('form').length == 1) {
-				window.location.replace(base_url+'config_pasaportes/ventas');
-			} 
-			else{
-				$('#frm-'+id_pasaporte_n).remove();
-			}
-			// 
-		}
+		venta(id_pasaporte_n);
+		// if (respuesta.indexOf('Hecho') >= 0) {
+		// 	if ($('form').length == 1) {
+		// 		window.location.replace(base_url+'config_pasaportes/ventas');
+		// 	} 
+		// 	else{
+		// 		$('#frm-'+id_pasaporte_n).remove();
+		// 	}
+		// }
 	});
 
 	$('#f_expiracion').datetimepicker({

@@ -5,6 +5,15 @@ class Inicio_m extends CI_Model {
     function __construct(){
         parent::__construct();
     }
+
+    public function fechas($condicion) {
+    
+      return $this->db
+        ->select('DAY(info_compra.fecha) AS dia, MONTH(info_compra.fecha) AS mes, YEAR(info_compra.fecha) AS year')
+        ->get_where('info_compra',$condicion)
+        ->result();
+      
+    }
     
     public function get_rol($id_usuario=false) {
         if ($id_usuario) {

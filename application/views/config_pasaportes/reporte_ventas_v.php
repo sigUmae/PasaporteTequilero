@@ -176,13 +176,26 @@
                           <td><?php echo $value_v->propietario?></td>
                           <td><?php echo $value_v->fecha?></td>
                           <td>
-                            <button
-                              data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
-                              type="button" 
-                              md-ink-ripple="" 
-                              class="btn-eliminar-venta btn btn-fw btn-error waves-effect waves-effect">
-                              Eliminar
-                            </button>
+                            <div class="col-sm-4">
+                            <?php if ($value_v->id_fisico == '0') { ?>
+                              <button
+                                data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
+                                type="button" 
+                                md-ink-ripple="" 
+                                class="btn-asignar btn btn-fw btn-success waves-effect waves-effect">
+                                Asignar
+                              </button>
+                            <?php } ?>
+                            </div>
+                            <div class="col-sm-4">
+                              <button
+                                data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
+                                type="button" 
+                                md-ink-ripple="" 
+                                class="btn-eliminar-venta btn btn-fw btn-error waves-effect waves-effect">
+                                Eliminar
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       <?php } ?>

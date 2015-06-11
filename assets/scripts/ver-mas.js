@@ -9,23 +9,6 @@ $('document').ready(function(){
 		});
 	}
 
-	// $('.table-responsive').on('click','a.ver-mas',function(event){
-	// 	event.preventDefault();
-	// 	var href = $(this).attr('href');
-	// 	window.location.replace(base_url+'ver_mas?pasaporte='+href);
-	// });
-
-	// $('.table-responsive').on('click','a.visitado',function(event){
-	// 	event.preventDefault();
-	// 	var href = $(this).attr('href');
-	// 	var obj = {'pasaporte':href};
-	// 	var result =  ajax('post',base_url+'config_pasaportes/visitado',true,obj);
-	// 	result.success(function(data){
-	// 		window.location.replace(base_url+'config_pasaportes/visitas');
-	// 	});
-	// 	// window.location.replace(base_url+'visitado?pasaporte='+href);
-	// });
-
 	function getUrlParameter(sParam)
 	{
 	    var sPageURL = window.location.search.substring(1);
@@ -98,6 +81,25 @@ $('document').ready(function(){
     	theme: 'tooltipster-shadow',
     	position: 'bottom',
     	maxWidth: '160'
+	});
+
+	$('#mod_correo').on('click',function(){
+		$('#submit-btn').click();
+	});
+
+	$('#frm-cambiar-correo').on('submit',function(e){
+		e.preventDefault();
+		var obj = {
+			'id_pasaporte': $('#mod_correo').data('id-pasaporte'),
+			'correo': $('#correo').val()
+		}
+		var result = ajax('post',base_url+'ver_mas/cambiar_correo',true,obj);
+		result.success(function(data){
+			alert(data);
+			if (data == 'Hecho') {
+				location.reload();
+			}
+		});
 	});
 
 });

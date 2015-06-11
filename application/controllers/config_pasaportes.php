@@ -16,6 +16,17 @@ class Config_pasaportes extends CI_Controller {
         redirect('inicio/index');
 
     }
+
+    public function asignar() {
+    
+        $id_pasaporte = $this->input->post('id_pasaporte',true);
+        $id_fisico = $this->input->post('id_fisico',true);
+        $ajax_request = $this->input->is_ajax_request();
+        if ($id_pasaporte and $id_fisico and $ajax_request) {
+            $this->Master_m->update('info_compra',array('id_fisico' => $id_fisico),array('id_pasaporte' => $id_pasaporte));
+            echo 'Hecho';
+        }
+    }
     
     public function enviar_pasaporte() {
     
@@ -636,7 +647,6 @@ class Config_pasaportes extends CI_Controller {
                     if (!empty($existe)) {
                         $numero = rand();
                         $id_pasaporte = md5($numero);
-                        // $pa = '1';
                         $pago_ = array('1' => 'Pagado', '2' => 'Pagado');
                         $this->Master_m->insert('info_compra',array(
                             'propietario' => $propietario,
@@ -658,12 +668,14 @@ class Config_pasaportes extends CI_Controller {
                         $info_msj = array(
                             'dominio' => 'no-replay@pasaportetequilero.mx',
                             'origen' => 'Hacienda Pasaporte tequila', 
-                            'asunto' => 'Compra pasaporte tequilero', 
+                            'asunto' => 'Compra de pasaporte tequilero', 
                             'texto' => $mensaje[$fisico],
                             'destino' => $correo,
-                            'usuario' => $propietario
+                            'usuario' => $propietario,
+                            'url_acceso' => base_url('pasaporte_virtual/acceso?id='.$id_pasaporte)
                         );
-                         $enviado = $this->enviar_msj($info_msj);
+                        // $enviado = $this->enviar_msj($info_msj);
+                        $enviado = $this->enviar_msj_html($info_msj);
                         if (!$enviado) {
                             echo 'Correo enviado - '; // Success  
                         }
@@ -699,30 +711,6 @@ class Config_pasaportes extends CI_Controller {
         PayU::$language = SupportedLanguages::ES;
         PayU::$isTest = $value;
 
-    }
-
-    private function metodos_pago_activos($payment=false) {
-
-        // $response = PayUPayments::doPing();
-        // if ($response->code == 'SUCCESS') {
-            $array = PayUPayments::getPaymentMethods();
-            $payment_methods = $array->paymentMethods;
-            if ($payment) {
-                foreach ($payment_methods as $payment_method) {
-                    if ($payment_method->id == $payment) {
-                       return true;
-                    }
-                }
-                return false;
-            } 
-            else {
-                return $payment_methods;
-            }
-        // } 
-        // else {
-        //     return false;
-        // }
-        
     }
 
     public function visitado() {
@@ -797,6 +785,43 @@ class Config_pasaportes extends CI_Controller {
     	}
         else {
             print_r('Error'); // Error
+        }
+
+    }
+
+    // $message = str_replace('%testusername%', $username, $message); 
+    // $message = str_replace('%testpassword%', $password, $message); 
+
+    private function enviar_msj_html($info_msj) {
+
+        $message = file_get_contents(base_url('assets/email/email.html'));
+        $message = str_replace('%url_acceso%',$info_msj['url_acceso'],$message); 
+        $mail = new PHPMailer;
+        $mail->IsSMTP(); 
+        $mail->SMTPAuth   = true; 
+        $mail->SMTPSecure = 'ssl';  
+        // $mail->Host       = 'pasaportetequilero.mx';     
+        $mail->Host       = 'smtp.gmail.com'; 
+        $mail->Port       = 465;                   
+        // $mail->Username   = 'no-replay@pasaportetequilero.mx';  
+        // $mail->Password   = '&{p$v[9DwCO}';      
+        $mail->Username   = 'pasaporte.tequila@gmail.com';  
+        $mail->Password   = 'pasaporte_tequila';
+        $mail->SetFrom($info_msj['dominio'], $info_msj['origen']); 
+        $mail->From = 'no-replay@pasaportetequilero.mx';
+        $mail->Subject    = $info_msj['asunto'];
+        // $mail->Body       = $info_msj['texto'];
+        // $mail->AltBody    = $info_msj['texto'];
+        $mail->MsgHTML($message);
+        $mail->IsHTML(true);
+        $mail->AddAddress($info_msj['destino'], $info_msj['usuario']);
+        $mail->CharSet = 'UTF-8';
+
+        if(!$mail->Send()) {
+           return $mail->ErrorInfo;
+        } 
+        else {
+            return false;
         }
 
     }

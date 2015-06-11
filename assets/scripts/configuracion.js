@@ -140,6 +140,22 @@ $('document').ready(function(){
 
 	// - EVENTOS
 
+
+	$('.btn-asignar').on('click',function(){
+		var id_fisico = prompt('Por favor ingrese ID físico del pasaporte');
+	    if (id_fisico != null) {
+	       var obj = {
+	       	'id_pasaporte': $(this).data('id-pasaporte'),
+	       	'id_fisico': id_fisico
+	       }
+	       var result =ajax('post',base_url+'config_pasaportes/asignar',false,obj);
+	       result.success(function(data){
+	       	alert(data);
+	       	location.reload();
+	       });
+	    }
+	});
+
 	$('#contain-panel').on('click','#confirmar',function(){
 		var obj = {
 			'id_pasaporte': id_pasaporte,
