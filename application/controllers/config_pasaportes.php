@@ -218,7 +218,6 @@ class Config_pasaportes extends CI_Controller {
     }
 
     private function get_comision($vendedor,$id) {
-
         if ($vendedor == 'id_hacienda') {
             $comision_vendedor = $this->Config_pasaporte_m->total_comisiones_h($vendedor,$id);
             $tipo_vendedor = '1'; // Hacienda
@@ -667,15 +666,16 @@ class Config_pasaportes extends CI_Controller {
                         );
                         $info_msj = array(
                             'dominio' => 'no-replay@pasaportetequilero.mx',
-                            'origen' => 'Hacienda Pasaporte tequila', 
+                            'origen' => 'Pasaporte tequilero', 
                             'asunto' => 'Compra de pasaporte tequilero', 
-                            'texto' => $mensaje[$fisico],
+                            // 'texto' => $mensaje[$fisico],
+                            'texto' => 'Gracias por comprar tu Pasaporte Tequilero, el siguiente paso es descargar tu Pasaporte Tequilero Virtual, el cual te servirá para reclamar tu Pasaporte Físico, ingresa a la liga y asigna un usuario: '.base_url().'pasaporte_virtual/acceso?id='.$id_pasaporte,
                             'destino' => $correo,
                             'usuario' => $propietario,
                             'url_acceso' => base_url('pasaporte_virtual/acceso?id='.$id_pasaporte)
                         );
-                        // $enviado = $this->enviar_msj($info_msj);
-                        $enviado = $this->enviar_msj_html($info_msj);
+                        $enviado = $this->enviar_msj($info_msj);
+                        // $enviado = $this->enviar_msj_html($info_msj);
                         if (!$enviado) {
                             echo 'Correo enviado - '; // Success  
                         }

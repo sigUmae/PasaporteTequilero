@@ -59,7 +59,7 @@ class Config_pasaporte_m extends CI_Model {
     
         return $this->db
                     ->select('hacienda.hacienda as vendedor, count(info_compra.id) as comision, hacienda.id as id_vendedor, info_compra.tipo_pago as tipo_pago')
-                    ->join('hacienda','info_compra.'.$vendedor.' = hacienda.id AND info_compra.'.$vendedor.' = "'.$id_vendedor.'" AND status="1"')
+                    ->join('hacienda','info_compra.'.$vendedor.' = hacienda.id AND info_compra.'.$vendedor.' = "'.$id_vendedor.'" AND info_compra.status_comision = "1"')
                     ->get('info_compra')
                     ->result();   
         
@@ -69,7 +69,7 @@ class Config_pasaporte_m extends CI_Model {
 
         return $this->db
                     ->select('aliado.aliado as vendedor, count(info_compra.id) as comision, aliado.id as id_vendedor, info_compra.tipo_pago as tipo_pago')
-                    ->join('aliado','info_compra.'.$vendedor.' = aliado.id AND info_compra.'.$vendedor.' = "'.$id_vendedor.'" AND status="1"')
+                    ->join('aliado','info_compra.'.$vendedor.' = aliado.id AND info_compra.'.$vendedor.' = "'.$id_vendedor.'" AND info_compra.status_comision = "1"')
                     ->get('info_compra')
                     ->result();        
 
@@ -79,7 +79,7 @@ class Config_pasaporte_m extends CI_Model {
     
         return $this->db
                     ->select('*, visitas.fecha AS fecha_visita')
-                    ->join('visitas','info_compra.id_pasaporte = visitas.id_pasaporte AND status="1" AND DATE(visitas.fecha) '.$fecha)
+                    ->join('visitas','info_compra.id_pasaporte = visitas.id_pasaporte AND info_compra.status = "1" AND DATE(visitas.fecha) '.$fecha)
                     ->group_by('info_compra.id')
                     ->get('info_compra')
                     ->result();

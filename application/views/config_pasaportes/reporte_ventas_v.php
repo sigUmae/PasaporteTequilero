@@ -176,7 +176,7 @@
                           <td><?php echo $value_v->propietario?></td>
                           <td><?php echo $value_v->fecha?></td>
                           <td>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                             <?php if ($value_v->id_fisico == '0') { ?>
                               <button
                                 data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
@@ -187,7 +187,7 @@
                               </button>
                             <?php } ?>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                               <button
                                 data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
                                 type="button" 
@@ -195,6 +195,11 @@
                                 class="btn-eliminar-venta btn btn-fw btn-error waves-effect waves-effect">
                                 Eliminar
                               </button>
+                            </div>
+                            <div class="col-sm-2 m-t-n">
+                              <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_v->id_pasaporte?>">
+                                <span class="label bg-success" title="Ver más">Ver más</span>
+                              </a>
                             </div>
                           </td>
                         </tr>
