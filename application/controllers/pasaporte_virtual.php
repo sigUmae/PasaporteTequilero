@@ -65,7 +65,7 @@ class Pasaporte_virtual extends CI_Controller {
                 $pdf->SetFont($fontname,'',40,'', true);
                 $pdf->SetTextColor(20,108,133);  
                 $pdf->AddPage();
-                $pdf->Text(17,3,'Pasaporte tequilero');
+                $pdf->Text(17,3,'Pasaporte Tequilero');
                 $pdf->SetTextColor(0,0,0); 
                 $pdf->SetFont($fontname,'',16,'', true);
                 $pdf->Text(17,20,'Propietario:');

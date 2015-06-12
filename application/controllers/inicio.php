@@ -40,7 +40,7 @@ class Inicio extends CI_Controller {
 					$semena_visita = $this->count_day('visitas');
 					$semena_kit = $this->count_days_kit('2');
 					$semena_comision = $this->fecha_comision();
-
+					
 					// echo '<pre>';
 					// print_r(json_encode($this->fecha_comision())); exit();
 					
