@@ -107,6 +107,13 @@
                 </div>
               </div>
             </div>
+            <nav>
+              <ul class="nav b-t b">
+                <li style="text-align: center">
+                  Derechos Reservados 2015 <br> Sitio Desarrollado por bienTICS & Bridgestudio
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </aside>
@@ -196,6 +203,9 @@
                             <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Pasaporte virtual</button>
                           </a>
                            <button id="enviar_pt" data-id-pasaporte="<?php echo $id; ?>" type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Enviar pasaporte por correo</button>
+                            <?php if ($h_visita == '0') { ?>
+                              <button data-id-pasaporte="<?php echo $id; ?>" type="button" md-ink-ripple="" class="visita btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect m-t">Visita</button>
+                            <?php } ?>
                         </div>
                       </div>
                     </div>

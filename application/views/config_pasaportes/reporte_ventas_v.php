@@ -102,6 +102,13 @@
                 </div>
               </div>
             </div>
+            <nav>
+              <ul class="nav b-t b">
+                <li style="text-align: center">
+                  Derechos Reservados 2015 <br> Sitio Desarrollado por bienTICS & Bridgestudio
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </aside>

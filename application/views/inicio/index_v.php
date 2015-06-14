@@ -1,3 +1,8 @@
+<?php 
+  if ( !isset($_SERVER['HTTPS'])) {
+    header('Location: https://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI']);
+  }
+?>
 <?php echo $header; ?>
     <div class="app">  
       <aside id="aside" class="app-aside modal fade " role="menu">
@@ -101,6 +106,13 @@
                 </div>
               </div>
             </div>
+            <nav>
+              <ul class="nav b-t b">
+                <li style="text-align: center">
+                  Derechos Reservados 2015 <br> Sitio Desarrollado por bienTICS & Bridgestudio
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </aside>

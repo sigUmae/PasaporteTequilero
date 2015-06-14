@@ -17,6 +17,26 @@ class Ver_mas extends CI_Controller {
 				$valid['visita'] = $this->pasaporte($get);
 				$valid['info_pasaporte'] = $valid['info_pasaporte'][0];
 				$valid['id'] = $get;
+
+        $id_hacienda = $this->Inicio_m->get_id_vendedor(array(
+          'vendedor' => 'hacienda',
+          'id_usuario' => $this->session->userdata('id_usuario')
+        ));  
+        $valid['h_visita'] = '1';
+        if (!empty($id_hacienda)) {
+          $id_hacienda = $id_hacienda[0]->id_hacienda;
+          switch ($id_hacienda) {
+            case '1':
+              $valid['h_visita'] = $valid['info_pasaporte']->sauza == '1';
+              break;
+            case '2':
+              $valid['h_visita'] = $valid['info_pasaporte']->herradura == '1';
+              break;
+            case '3':
+              $valid['h_visita'] = $valid['info_pasaporte']->cofradia == '1';
+              break;
+          } 
+        }
 				$this->load->view('ver_mas/pasaporte_v',$valid);	
 			}
 			else {
@@ -42,21 +62,6 @@ class Ver_mas extends CI_Controller {
             if (!empty($existe)) {
                $this->Master_m->update('info_compra',array('correo' => $correo),array('id_pasaporte' => $id_pasaporte));
                echo 'Hecho';
-               // $info_msj = array(
-               //     'dominio' => 'no-replay@pasaportetequilero.mx',
-               //     'origen' => 'Hacienda Pasaporte tequila', 
-               //     'asunto' => 'Pasaporte', 
-               //     'texto' => 'ID virtual: '.$info_compra[0]->id_pasaporte. ' ID físico: '.$info_compra[0]->id_fisico,
-               //     'destino' => $info_compra[0]->correo,
-               //     'usuario' => $info_compra[0]->propietario
-               // );
-               // $enviado = $this->enviar_msj($info_msj);
-               // if (!$enviado) {
-               //     echo 'Pasaporte enviado'; // Success  
-               // }
-               // else {
-               //     echo 'Error al enviar pasaporte'; // Error al enviar
-               // }
             }
             else {
                echo 'Pasaporte no encontrado';

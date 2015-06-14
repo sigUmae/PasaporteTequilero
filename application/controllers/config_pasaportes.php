@@ -17,6 +17,61 @@ class Config_pasaportes extends CI_Controller {
 
     }
 
+    public function revisar_compras_landing() {
+    
+        $ajax_request = $this->input->is_ajax_request();
+        if ($ajax_request) {
+            $conexion_l = $this->conexion_landing();
+            $sql = 
+            'SELECT * FROM _referencias
+            JOIN _user_refe
+            ON _referencias.idReferencia = _user_refe.idReferencia
+            AND _referencias.status = "APROVED"
+            JOIN _usuarios
+            ON _user_refe.idUsuario = _usuarios.idUsuario
+            AND _usuarios.status = "1"';
+            $result = $conexion_l->query($sql,MYSQLI_USE_RESULT);
+            if (!$result){
+                echo "Error: (" . $conexion_l->errno . ") " . $conexion_l->error;
+                exit();
+            }
+            else {
+                while($pasaporte = $result->fetch_object()) {
+                    $ya_agregado = $this->Master_m->filas_condicion('info_compra',array('id_landing' => $pasaporte->idUsuario));
+                    if (empty($ya_agregado)) {
+                        $id_pasaporte = md5(rand());
+                        $this->Master_m->insert('info_compra',array(
+                            'propietario' => $pasaporte->nombre,
+                            'id_web' => '1',
+                            'referencia' => $pasaporte->idReferencia,
+                            'tipo_pago' => 'Pagado',
+                            'efectivo_tarjeta' => '2', 
+                            'telefono' => $pasaporte->telefono,
+                            'correo' => $pasaporte->email,
+                            'id_pasaporte' => $id_pasaporte,
+                            'vendedor' => 'Web',
+                            'id_landing' => $pasaporte->idUsuario
+                        ));   
+                    }
+                }
+                echo '1';
+            }
+            $result->close();
+            $conexion_l->close();
+        }
+        
+    }
+
+    private function conexion_landing() {
+
+        $mysqli = new mysqli("localhost", "pasaport_tequila", "Upsin011086", "pasaport_pasaporte");
+        if ($mysqli->connect_errno) {
+             die("Error: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
+        }
+        return $mysqli;
+
+    }
+
     public function asignar() {
     
         $id_pasaporte = $this->input->post('id_pasaporte',true);
