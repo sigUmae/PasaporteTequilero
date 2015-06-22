@@ -112,15 +112,12 @@
     </div>
   </div>
   <nav>
-    <ul class="nav b-t b">
-      <li>
-        <a href="http://themeforest.net/item/materil-responsive-admin-dashboard-template/11062969" target="_blank" md-ink-ripple>
-          <i class="icon mdi-action-help i-20"></i>
-          <span>Help &amp; Feedback</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+              <ul class="nav b-t b">
+                <li style="text-align: center">
+                  Derechos Reservados 2015 <br> Sitio Desarrollado por bienTICS & Bridgestudio
+                </li>
+              </ul>
+            </nav>
 </div>
 
     </div>

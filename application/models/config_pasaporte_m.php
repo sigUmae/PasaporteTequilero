@@ -40,18 +40,18 @@ class Config_pasaporte_m extends CI_Model {
     public function comision_efectivo($id_vendedor,$vendedor,$status) { 
 
         return $this->db
-                    ->select('count(*) as compra')
-                    ->get_where('info_compra',array($vendedor => $id_vendedor, 'efectivo_tarjeta' => $status, 'status' => '1'))
-                    ->result();        
+        	->select('count(*) as compra')
+                ->get_where('info_compra',array($vendedor => $id_vendedor, 'efectivo_tarjeta' => $status, 'status' => '1'))
+                ->result();        
     }
 
     public function comisiones_aliado($vendedor,$id_vendedor) {
 
         return $this->db
-                    ->select('aliado.aliado as vendedor, count(info_compra.id) as comision')
-                    ->join('aliado','info_compra.'.$vendedor.' = aliado.id AND info_compra.'.$vendedor.' = "'.$id_vendedor.'" AND info_compra.status_comision = "1" AND status = "1"')
-                    ->get('info_compra')
-                    ->result();        
+        	->select('aliado.aliado as vendedor, count(info_compra.id) as comision')
+                ->join('aliado','info_compra.'.$vendedor.' = aliado.id AND info_compra.'.$vendedor.' = "'.$id_vendedor.'" AND info_compra.status_comision = "1" AND status = "1"')
+        	->get('info_compra')
+                ->result();        
 
     }
 
@@ -88,7 +88,7 @@ class Config_pasaporte_m extends CI_Model {
     public function reporte_ventas($fecha="= CURDATE()") {
     
         return $this->db
-                    ->where('status="1" AND DATE(info_compra.fecha) '.$fecha)
+                    ->where('status = "1" AND DATE(info_compra.fecha) '.$fecha)
                     ->get('info_compra')
                     ->result();
         
@@ -98,7 +98,7 @@ class Config_pasaporte_m extends CI_Model {
     
         return $this->db
                     ->join('visitas','info_compra.id_pasaporte = visitas.id_pasaporte AND visitas.id_pasaporte = '.$id_pasaporte)
-                    ->join('hacienda','visitas.id_hacienda = hacienda.id AND status="1"')
+                    ->join('hacienda','visitas.id_hacienda = hacienda.id AND status = "1"')
                     ->group_by('hacienda.id')
                     ->get('info_compra')
                     ->result();

@@ -183,7 +183,7 @@
                                   innerRadius: 0.4, 
                                   stroke: 
                                   { 
-                                    width: 2 
+                                    width: 3
                                   }, 
                                   label: 
                                   { 

@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-    <div class="app">  
+   <div class="app">  
       <aside id="aside" class="app-aside modal fade " role="menu">
         <div class="left">
           <div class="box bg-white">
@@ -387,6 +387,6 @@
         </div>
       </div>
     </div>
-    <div class="modal-load"></div>
+   <div class="modal-load"></div>
   </body>
 </html>

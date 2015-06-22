@@ -15,19 +15,19 @@ $('document').ready(function(){
 			data: datos
 		});
 	}
-
+	
 	function rcl() {
 		rcl_();
 		setInterval(function(){ 
 			rcl_();				
-		},36000);
+		},36000000);
 	}
 
 	function rcl_() {
 		var result = ajax('post',base_url+'config_pasaportes/revisar_compras_landing',true,null);
 		result.success(function(data){
 			if (data != '1') {
-				alert(data);
+				// alert(data);
 			}
 		}); 
 	}
@@ -90,6 +90,7 @@ $('document').ready(function(){
 					}
 				}
 		   }
+		   // ......
 		 });
 		// var results = ajax('post',base_url+'config_pasaportes/realizar_venta',true,obj);
 		// results.beforeSend(function(data){
@@ -164,7 +165,7 @@ $('document').ready(function(){
 	$('.virtual').prop('checked',true);
 	
 	// id_pasaporte();
-
+	
 	rcl();
 
 });

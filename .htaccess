@@ -2,8 +2,8 @@
     RewriteEngine On 
     RewriteCond %{REQUEST_FILENAME} !-f 
     RewriteCond %{REQUEST_FILENAME} !-d 
-    RewriteRule ^(.*)$ /pasaportetequilero/index.php/$1 [L] 
+    RewriteRule ^(.*)$ /PasaporteTequilero/index.php/$1 [L] 
 </IfModule>
 <IfModule !mod_rewrite.c>
-    ErrorDocument 404 /pasaportetequilero/index.php 
+    ErrorDocument 404 /PasaporteTequilero/index.php 
 </IfModule>

@@ -112,20 +112,13 @@
           </div>
         </div>
       </aside>
-      <!-- / aside -->
-      <!-- content -->
       <div id="content" class="app-content" role="main">
         <div class="box">
-          <!-- Content Navbar -->
           <div class="navbar md-whiteframe-z1 no-radius <?php echo $color_1; ?>">
-            <!-- Open side - Naviation on mobile -->
             <a md-ink-ripple  data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
-            <!-- / -->
-            <!-- Page title - Bind to $state's title -->
             <div class="navbar-item pull-left h4">Pasaporte tequilero - <?php echo $rol; ?></div>
-            <!-- / -->
-            <!-- Common tools -->
             <ul class="nav navbar-tool pull-right">
+              </li>
               <li class="dropdown">
                 <a md-ink-ripple data-toggle="dropdown">
                   <i class="mdi-navigation-more-vert i-24"></i>
@@ -140,16 +133,12 @@
               </li>
             </ul>
             <div class="pull-right" ui-view="navbar@"></div>
-            <!-- / -->
-            <!-- Search form -->
             <div id="search" class="pos-abt w-full h-full indigo hide">
               <div class="box">
                 <div class="box-col w-56 text-center">
-                  <!-- hide search form -->
                   <a md-ink-ripple class="navbar-item inline"  ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
                 </div>
                 <div class="box-col v-m">
-                  <!-- bind to app.search.content -->
                   <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
                 </div>
                 <div class="box-col w-56 text-center">
@@ -157,18 +146,23 @@
                 </div>
               </div>
             </div>
-            <!-- / -->
           </div>
-          <!-- Content -->
           <div class="box-row">
             <div class="box-cell">
               <div class="box-inner padding">
-                <div class="panel panel-default">
+                <div id="contain-panel" class="panel panel-default">
                   <div class="panel-heading">
-                    Visitas
+                    Reporte ventas
                   </div>
-                  <div class="panel-body b-b b-light" style="text-align: right">
-                    Buscar: <input id="filter" type="text" class="form-control input-sm w-auto inline m-r"/>
+                  <div id="before-confirm" class="panel-body b-b b-light">
+                    <div class="col-sm-6" style="padding-left: 0">
+                      <a href="<?php echo base_url('config_pasaportes/ventas?action=venta')?>">
+                        <button  md-ink-ripple="" class="btn btn-fw btn-success waves-effect waves-effect btn-aceptar">Nueva venta</button>
+                      </a>
+                    </div>
+                    <div class="col-sm-6" style="text-align: right">
+                      Buscar: <input id="filter" type="text" class="form-control input-sm w-auto inline m-r"/>
+                    </div>
                   </div>
                   <div class="table-responsive">
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
@@ -178,67 +172,42 @@
                                 Propietario
                             </th>
                             <th data-hide="phone,tablet">
-                                Fecha de compra
+                                Fecha
                             </th>
-                            <th data-hide="phone">
-                                Acci√≥n
-                            </th>
+                            <th>Acci√≥n</th>
                         </tr>
                       </thead>
                       <tbody>
-                      <?php foreach ($pasaportes as $value_p) { ?>
-                        <tr data-id="<php echo $value_p->id?>">
-                          <td><?php echo $value_p->propietario?></td>
-                          <td><?php echo $value_p->fecha?></td>
-                          <!-- <td><?php echo $value_p->tipo_pago?></td> -->
+                      <?php foreach ($ventas_ as $key => $value_v) { ?>
+                        <tr>
+                          <td><?php echo $value_v->propietario?></td>
+                          <td><?php echo $value_v->fecha?></td>
                           <td>
-                            <div class="col-sm-2 m-t-n">
-                            <?php switch($id_hacienda_v){
-                            	case 'sauza':
-                            		if($value_p->sauza == '0') { ?>
-	                            		<span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
-		                                  class="label bg-success visita" title="Visita" 
-		                                  style="cursor: pointer">Visita
-		                              	</span>
-                            		<?php }
-                            		break;
-                            	case 'herradura':
-                            		if($value_p->herradura == '0') { ?>
-	                            		<span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
-		                                  class="label bg-success visita" title="Visita" 
-		                                  style="cursor: pointer">Visita
-		                              	</span>
-                            		<?php }
-                            		break;
-                            	case 'cofradia':
-                            		if($value_p->cofradia== '0') { ?>
-	                            		<span data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" 
-		                                  class="label bg-success visita" title="Visita" 
-		                                  style="cursor: pointer">Visita
-		                              	</span>
-                            		<?php }
-                            		break;
-                            } ?>
-                              
+                            <div class="col-sm-3">
+                            <?php if ($value_v->id_fisico == '0') { ?>
+                              <button
+                                data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
+                                type="button" 
+                                md-ink-ripple="" 
+                                class="btn-asignar btn btn-fw btn-success waves-effect waves-effect">
+                                Asignar
+                              </button>
+                            <?php } ?>
+                            </div>
+                            <div class="col-sm-3">
+                              <button
+                                data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
+                                type="button" 
+                                md-ink-ripple="" 
+                                class="btn-eliminar-venta btn btn-fw btn-error waves-effect waves-effect">
+                                Eliminar
+                              </button>
                             </div>
                             <div class="col-sm-2 m-t-n">
-                              <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_p->id_pasaporte?>">
-                                <span class="label bg-success" title="Ver m√°s">Ver m√°s</span>
+                              <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_v->id_pasaporte?>">
+                                <span class="label bg-success" title="Ver m®¢s">Ver m®¢s</span>
                               </a>
                             </div>
-                            <?php if ($value_p->kit == '1') { ?>
-                            <div class="col-sm-3">
-                              <div data-id-pasaporte="<?php echo $value_p->id_pasaporte?>" class="col-sm-3">
-                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-success waves-effect waves-effect">Enviar KIT</button>
-                              </div>
-                            </div>
-                            <?php } else if ($value_p->kit == '2') { ?>
-                            <div class="col-sm-3">
-                              <div class="col-sm-3">
-                                <button type="button" md-ink-ripple="" class="btn-kit kit-width btn btn-fw btn-error waves-effect waves-effect">KIT enviado</button>
-                              </div>
-                            </div>
-                            <?php } ?>
                           </td>
                         </tr>
                       <?php } ?>

@@ -1,3 +1,8 @@
+<?php 
+  // if ( !isset($_SERVER['HTTPS'])) {
+  //   header('Location: https://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI']);
+  // }
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -33,7 +38,6 @@
     <script src="<?php echo $url.'assets/scripts/moment.min.js'?>"></script>
     <script src="<?php echo $url.'assets/scripts/bootstrap-datetimepicker.min.js'?>"></script>
     
-    <!--<script src="<?php // echo $url.'assets/scripts/jquery-validation/dist/additional-methods.min.js';?>"></script>-->
     <script src="<?php echo $url.'assets/scripts/jquery-validation/dist/jquery.validate.min.js';?>"></script>
     <script src="<?php echo $url.'assets/scripts/jquery-validation/js/jquery.validate.min.js';?>"></script>
     <script src="<?php echo $url.'assets/libs/jquery/datatables/media/js/jquery.dataTables.min.js';?>"></script>

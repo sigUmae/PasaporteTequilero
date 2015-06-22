@@ -23,7 +23,6 @@ class Inicio extends CI_Controller {
 					$data['color_1'] = 'c-admin';
 					$data['color_2'] = 'c-admin-50';
 					$data['admin'] = '1';
-					// exit();
 					$total_vendidos = $this->Inicio_m->count_pasaportes(array('status' => '1','tipo_pago' => 'Pagado'),'= CURDATE()');
 					if ($total_vendidos[0]->pasaportes == '0') {
 						$obj = new stdClass();
@@ -35,14 +34,17 @@ class Inicio extends CI_Controller {
 						$vendidos = $this->count($total_vendidos[0]->pasaportes);
 						$data['total_ventas'] = $total_vendidos[0]->pasaportes.' pasaportes';
 					}
-					// exit();
 					$semena_venta = $this->count_day('info_compra','1','AND tipo_pago = "Pagado"');
 					$semena_visita = $this->count_day('visitas');
 					$semena_kit = $this->count_days_kit('2');
 					$semena_comision = $this->fecha_comision();
-					
-					// echo '<pre>';
-					// print_r(json_encode($this->fecha_comision())); exit();
+					$vendidos_;
+					foreach($vendidos as $venta) {
+						if($venta->data > '0') {
+							$venta->data = round($venta->data);
+							$vendidos_[] = $venta;	
+						}
+					}
 					
 					$data['ventas'] = json_encode($vendidos);
 					$data['ventas_semana'] = json_encode($semena_venta);
