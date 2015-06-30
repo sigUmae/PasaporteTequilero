@@ -253,6 +253,8 @@ class Configuracion extends CI_Controller {
 			$data['rol'] = $this->Inicio_m->get_rol($this->session->userdata('id_usuario'));
 			$data['avatar'] = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
 			$data['avatar'] = $data['avatar'][0]->avatar;
+            $data['correo'] = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
+            $data['correo'] = $data['correo'][0]->correo;
 			$data['header'] = $this->get_header();
 			$data['menu_1'] = $this->Master_m->filas_condicion('menu_1',array('id_rol' => $data['rol'][0]->id_rol));
 			$data['id_rol'] = $data['rol'][0]->id;

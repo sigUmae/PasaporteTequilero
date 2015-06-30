@@ -6279,3 +6279,9 @@ body.loading {
 body.loading .modal-load {
     display: block;
 }
+.flex-center {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+}

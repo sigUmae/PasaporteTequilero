@@ -92,15 +92,6 @@ $('document').ready(function(){
 		   }
 		   // ......
 		 });
-		// var results = ajax('post',base_url+'config_pasaportes/realizar_venta',true,obj);
-		// results.beforeSend(function(data){
-		// 	alert('text')
-		// });
-		// results.success(function(data){
-		// 	alert(data);
-		// 	// respuesta = data;
-		// });
-		// return respuesta;
 	}
 
 	function elementos_tc(value,id_pasaporte_n) {

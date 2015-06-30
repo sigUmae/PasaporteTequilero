@@ -6,6 +6,14 @@ class Config_pasaporte_m extends CI_Model {
         parent::__construct();
     }
     
+    public function get_visita_propietario($id_hacienda) {
+        return $this->db
+            ->select('*, info_compra.id AS id_pasaporte_i, info_compra.fecha AS f_compra, visitas.fecha AS f_visita')
+            ->join('info_compra','info_compra.id_pasaporte = visitas.id_pasaporte AND visitas.id_hacienda = '.$id_hacienda)
+            ->get('visitas')
+            ->result();
+    }
+
     public function estado_p() {
         return $this->db
                     ->join('estado_pasaporte','p_tequilero.estado = estado_pasaporte.id')

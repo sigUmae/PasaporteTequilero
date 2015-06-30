@@ -51,6 +51,7 @@ $('document').ready(function(){
 	};
 
 	var s_options = $('#contain-options');
+	var attr_e = $('#r_excel').attr('href');
 
 	// - FUNCIONES
 
@@ -66,6 +67,20 @@ $('document').ready(function(){
 	function elegir_rango(arguments) {
 		s_options.empty();
 		s_options.html(opciones[arguments]);
+	}
+
+	function url_excel(arguments) {
+		var funcion = 'config_pasaportes/g_reporte';
+		var get1 = $('#rango').val();
+		var get2 = $('#fecha1').data('date');
+		var get3 = $('#fecha2').data('date');
+		switch(get1) {
+			case 'hoy': 
+			case 'ayer': 
+			case 'mes': window.location.replace(base_url+funcion+'?rol='+$('#r_excel').data('rol')+'&'+arguments+'='+get1); break;
+			case 'fecha': window.location.replace(base_url+funcion+'?rol='+$('#r_excel').data('rol')+'&'+arguments+'='+get1+'&fecha1='+get2); break;
+			case 'rango-fechas': window.location.replace(base_url+funcion+'?rol='+$('#r_excel').data('rol')+'&'+arguments+'=entre&fecha1='+get2+'&fecha2='+get3); break;
+		}
 	}
 
 	function url(arguments) {
@@ -109,6 +124,25 @@ $('document').ready(function(){
 		$('#fecha1, #fecha2').datetimepicker({
 			format: 'YYYY-MM-DD'
 		});
+		// if (value != '') {
+		// 	$('#r_excel').attr('href',url_excel(s_options.data('id')));
+		// }
+		// else {
+		// 	$('#r_excel').attr('href',attr_e);
+		// }
+		if (value == '') {
+			$('#r_excel').attr('href',attr_e);
+		}
+	});
+
+	$('#r_excel').on('click',function(e){
+		if ($('#rango').val() == '') {
+			$('#r_excel').attr('href',attr_e);
+		}
+		else {
+			e.preventDefault();
+			url_excel(s_options.data('id'));
+		}
 	});
 
 	$('#datetimepicker1').datetimepicker({

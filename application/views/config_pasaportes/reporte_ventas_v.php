@@ -21,7 +21,7 @@
                         <i class="fa inline fa-caret-down"></i>
                         <i class="fa none fa-caret-up"></i>
                       </span>
-                      <small>pasaportetequilero1@gmail.com</small>
+                      <small><?php echo $correo; ?></small>
                     </a>
                   </div>
                   <div id="nav">
@@ -163,11 +163,22 @@
                     <div class="col-sm-6" style="text-align: right">
                       Buscar: <input id="filter" type="text" class="form-control input-sm w-auto inline m-r"/>
                     </div>
+                    <?php if ($id_rol != '3') { ?>
+                      <div class="col-sm-6" style="text-align:right; margin-top: 1.5%;">
+                      <div class="col-sm-12">
+                        <a  data-rol="<?php echo $id_rol; ?>" 
+                          href="<?php echo base_url('config_pasaportes/g_reporte?rol='.$id_rol.'&action=venta'); ?>">
+                          <button md-ink-ripple="" class="btn btn-fw btn-success waves-effect waves-effect waves-effect waves-effect">Excel</button>
+                        </a>
+                      </div>
+                    </div>
+                    <?php } ?>
                   </div>
                   <div class="table-responsive">
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
                       <thead>
                         <tr>
+                          <th>ID</th>
                             <th>
                                 Propietario
                             </th>
@@ -180,11 +191,12 @@
                       <tbody>
                       <?php foreach ($ventas_ as $key => $value_v) { ?>
                         <tr>
+                          <td><?php echo $value_v->id?></td>
                           <td><?php echo $value_v->propietario?></td>
                           <td><?php echo $value_v->fecha?></td>
-                          <td>
-                            <div class="col-sm-3">
+                          <td class="flex-center">
                             <?php if ($value_v->id_fisico == '0') { ?>
+                              <div style="margin-right: 12px;">
                               <button
                                 data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
                                 type="button" 
@@ -192,9 +204,9 @@
                                 class="btn-asignar btn btn-fw btn-success waves-effect waves-effect">
                                 Asignar
                               </button>
+                              </div>
                             <?php } ?>
-                            </div>
-                            <div class="col-sm-3">
+                            <div style="margin-right: 12px;">
                               <button
                                 data-id-pasaporte="<?php echo $value_v->id_pasaporte; ?>"
                                 type="button" 
@@ -203,7 +215,7 @@
                                 Eliminar
                               </button>
                             </div>
-                            <div class="col-sm-2 m-t-n">
+                            <div class="m-t-n">
                               <a href="<?php echo base_url('ver_mas').'?pasaporte='.$value_v->id_pasaporte?>">
                                 <span class="label bg-success" title="Ver más">Ver más</span>
                               </a>

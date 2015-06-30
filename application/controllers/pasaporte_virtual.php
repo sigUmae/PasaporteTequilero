@@ -33,6 +33,7 @@ class Pasaporte_virtual extends CI_Controller {
                     '11' => 'Noviembre',
                     '12' => 'Diciembre'
                 );
+                $num_pasaporte = $info[0]->id; 
                 $propietario = $info[0]->propietario;
                 $correo = $info[0]->correo;
                 $fecha = $this->Inicio_m->fechas(array('id_pasaporte' => $id_pasaporte));
@@ -63,7 +64,6 @@ class Pasaporte_virtual extends CI_Controller {
                 $pdf->setFontSubsetting(true);
                 $path_font = set_realpath('assets/fonts').'arialbd.ttf';
                 $fontname = TCPDF_FONTS::addTTFfont($path_font,'TrueTypeUnicode','',32);
-                $pdf->SetFont($fontname,'',8,'', true);
                 $pdf->SetTextColor(115,117,119); 
                 $pdf->AddPage(); 
                 $pdf->Image('pasaporte_virtual_acceso.png',10,10,410,500,'PNG','','',true,150,'',false,false,0,false,false,false);
@@ -76,6 +76,9 @@ class Pasaporte_virtual extends CI_Controller {
                     'module_height' => 1 
                 );
                 $pdf->write2DBarcode(base_url('ver_mas?pasaporte='.$id_pasaporte), 'QRCODE,L', 16, 148, 28, 28, $style, 'N');
+                $pdf->SetFont($fontname,'',12,'', true);
+                $pdf->Text(145,67,$num_pasaporte);
+                $pdf->SetFont($fontname,'',8,'', true);
                 $pdf->Text(17,103,$propietario);
                 $pdf->Text(17,116,$correo);
                 $pdf->SetTextColor(0,107,133); 

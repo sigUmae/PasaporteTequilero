@@ -23,7 +23,7 @@
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
             </span>
-            <small>pasaportetequilero1@gmail.com</small>
+            <small><?php echo $correo; ?></small>
           </a>
         </div>
         <div id="nav">

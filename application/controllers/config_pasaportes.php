@@ -3,12 +3,10 @@
 class Config_pasaportes extends CI_Controller {
 
 	function __construct() {
-
-        parent::__construct();
+    parent::__construct();
         $this->load->model(array('Inicio_m','Config_pasaporte_m'));
         $this->load->library('my_phpmailer');
-        $this->load->library('Payu_lib');
-
+        // $this->load->library('Payu_lib');
     }
 
     public function index() {
@@ -19,7 +17,7 @@ class Config_pasaportes extends CI_Controller {
     }
     
     public function revisar_compras_landing() {
-    
+
         $ajax_request = $this->input->is_ajax_request();
         if ($ajax_request) {
             $conexion_l = $this->conexion_landing();
@@ -695,7 +693,6 @@ class Config_pasaportes extends CI_Controller {
                     ));  
                     $id_hacienda = $id_hacienda[0]->id_hacienda;
                     $hacienda = array('1' => 'sauza','2' => 'herradura', '3' => 'cofradia');
-                    //$hacienda[$id_hacienda].' !=' =>'1')
                     $valid['id_hacienda_v'] = $hacienda[$id_hacienda];
                     $valid['pasaportes'] = $this->Master_m->filas_condicion('info_compra',array('status' => '1','tipo_pago' => 'Pagado'));
                     $valid['pasaportes'] = $this->visitas_($valid);
@@ -746,7 +743,6 @@ class Config_pasaportes extends CI_Controller {
         if ($rango1 || $rango2) {
             $tipos_rango = array(
                 'hoy' => '= CURDATE()',
-                // 'ayer' => '>= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND DATE(visitas.fecha) < CURDATE()',
                 'mes' => '>= DATE_SUB(CURDATE(), INTERVAL DAYOFMONTH(CURDATE())-1 DAY)'
             );
             if ($rango1 and $rango1 == 'ayer') {
@@ -810,7 +806,7 @@ class Config_pasaportes extends CI_Controller {
     	$valid = $this->menu();
     	$rol = $this->Inicio_m->get_rol($this->session->userdata('id_usuario'));
     	$rol = $rol[0]->id_rol;
-        $action = $this->input->get('action',true);
+      $action = $this->input->get('action',true);
     	if ($valid and ($rol == 1 || $rol == 2 || $rol == 3)) {
             if ($action and $action == 'venta') {
                 $venta = $this->Config_pasaporte_m->last_id('info_compra');
@@ -837,7 +833,7 @@ class Config_pasaportes extends CI_Controller {
                         $this->load->view('config_pasaportes/ventas_v',$valid);
                         break;
         		}
-            }
+          }
             else {
                 switch ($rol) {
                     case 1:
@@ -852,6 +848,8 @@ class Config_pasaportes extends CI_Controller {
                     case 3:
                         $valid['ventas_'] = $this->get_ha_('id_aliado',$this->session->userdata('id_usuario'));
                         $this->load->view('config_pasaportes/reporte_ventas_v',$valid);
+                        // echo '<pre>';
+                        // print_r($valid);
                         break;
                 }
             }
@@ -860,6 +858,288 @@ class Config_pasaportes extends CI_Controller {
     		redirect('login/index');
     	}
 
+    }
+
+    public function g_reporte() {
+      $ventas = true;
+      $pasaportes = '';
+      $rol = $this->input->get('rol',true);
+      $visita = $this->input->get('visita',true);
+      if ($rol) {
+        $this->excel->setActiveSheetIndex(0);
+        if ($rol == '1') {
+            if ($visita) {
+              $pasaportes = $this->Config_pasaporte_m->reporte_visitas();
+              $this->excel->getActiveSheet()->setTitle('Visitas');
+              $this->excel->getActiveSheet()->setCellValue('A1','ID pasaporte');
+              $this->excel->getActiveSheet()->setCellValue('B1','Propietario');
+              $this->excel->getActiveSheet()->setCellValue('C1','Vendedor');
+              $this->excel->getActiveSheet()->setCellValue('D1','Haciendas visitadas');
+              $this->excel->getActiveSheet()->setCellValue('E1','Fecha visitada');
+              $this->excel->getActiveSheet()->setCellValue('F1','Fecha de compra');
+              $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
+              $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setSize(12);
+              $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setSize(12);
+              $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setSize(12);
+              $this->excel->getActiveSheet()->getStyle('E1')->getFont()->setSize(12);
+              $this->excel->getActiveSheet()->getStyle('F1')->getFont()->setSize(12);
+              $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+              $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+              $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+              $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
+              $this->excel->getActiveSheet()->getStyle('E1')->getFont()->setBold(true);
+              $this->excel->getActiveSheet()->getStyle('F1')->getFont()->setBold(true);
+              $this->excel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+              // $this->excel->getActiveSheet()->getStyle('B')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+              $this->excel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+              $this->excel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+              $this->excel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+              $this->excel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+              $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+              $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+              $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+              $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+              $this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+              $this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+              for ($i=2; $i < count($pasaportes)+2; $i++) { 
+                    $this->excel->getActiveSheet()->setCellValue('A'.(string)$i,$pasaportes[$i-2]->id);
+                    $this->excel->getActiveSheet()->setCellValue('B'.(string)$i,$pasaportes[$i-2]->propietario);
+                    $this->excel->getActiveSheet()->setCellValue('C'.(string)$i,$pasaportes[$i-2]->vendedor);
+                    $hacienda_visitas = ($pasaportes[$i-2]->sauza == '1')?'Sauza ':'';
+                    $hacienda_visitas .= ($pasaportes[$i-2]->herradura == '1')?'Herradura ':'';
+                    $hacienda_visitas .= ($pasaportes[$i-2]->cofradia == '1')?'Cofradia':'';
+                    $this->excel->getActiveSheet()->setCellValue('D'.(string)$i,$hacienda_visitas);
+                    $this->excel->getActiveSheet()->setCellValue('E'.(string)$i,$pasaportes[$i-2]->fecha);
+                    $this->excel->getActiveSheet()->setCellValue('F'.(string)$i,$pasaportes[$i-2]->fecha_visita);
+              }
+              $filename = 'Reporte_ventas_'.date('Y-m-d h:i:sa').'.xls';
+            }
+            else {
+              $pasaportes = $this->Master_m->filas_condicion('info_compra',array('status' => '1'));
+            }
+            $rango1 = $this->input->get('rango_visitas',true);
+            $rango2 = $this->input->get('rango_ventas',true);
+            if ($rango1 || $rango2) {
+                $tipos_rango = array(
+                    'hoy' => '= CURDATE()',
+                    'mes' => '>= DATE_SUB(CURDATE(), INTERVAL DAYOFMONTH(CURDATE())-1 DAY)'
+                );
+                if ($rango1 and $rango1 == 'ayer') {
+                    $tipos_rango['ayer'] = '>= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND DATE(visitas.fecha) < CURDATE()';
+                } 
+                else {
+                    $tipos_rango['ayer'] = '>= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND DATE(info_compra.fecha) < CURDATE()';
+                }
+                if ($rango1 == 'entre' || $rango2 == 'entre') {
+                    $fecha1 = $this->input->get('fecha1',true);
+                    $fecha2 = $this->input->get('fecha2',true);
+                    if ($rango1) {
+                        $tipos_rango['entre'] = '>= "'.$fecha1.'" AND DATE(visitas.fecha) <= "'.$fecha2.'"';
+                    } 
+                    else {
+                        $tipos_rango['entre'] = '>= "'.$fecha1.'" AND DATE(info_compra.fecha) <= "'.$fecha2.'"';
+                    }   
+                } 
+                if ($rango1 == 'fecha' || $rango2 == 'fecha') {
+                    $fecha1 = $this->input->get('fecha1',true);
+                    $tipos_rango['fecha'] = ' = "'.$fecha1.'"';
+                }
+                if ($rango1) {
+                    $pasaportes = $this->Config_pasaporte_m->reporte_visitas($tipos_rango[$rango1]);
+                    if (!empty($pasaportes)) {
+                      $this->excel->getActiveSheet()->setTitle('Visitas');
+                      $this->excel->getActiveSheet()->setCellValue('A1','ID pasaporte');
+                      $this->excel->getActiveSheet()->setCellValue('B1','Propietario');
+                      $this->excel->getActiveSheet()->setCellValue('C1','Vendedor');
+                      $this->excel->getActiveSheet()->setCellValue('D1','Haciendas visitadas');
+                      $this->excel->getActiveSheet()->setCellValue('E1','Fecha visitada');
+                      $this->excel->getActiveSheet()->setCellValue('F1','Fecha de compra');
+                      $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
+                      $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setSize(12);
+                      $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setSize(12);
+                      $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setSize(12);
+                      $this->excel->getActiveSheet()->getStyle('E1')->getFont()->setSize(12);
+                      $this->excel->getActiveSheet()->getStyle('F1')->getFont()->setSize(12);
+                      $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+                      $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+                      $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+                      $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
+                      $this->excel->getActiveSheet()->getStyle('E1')->getFont()->setBold(true);
+                      $this->excel->getActiveSheet()->getStyle('F1')->getFont()->setBold(true);
+                      $this->excel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                      // $this->excel->getActiveSheet()->getStyle('B')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                      $this->excel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                      $this->excel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                      $this->excel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                      $this->excel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                      $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                      $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                      $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                      $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                      $this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+                      $this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+                      for ($i=2; $i < count($pasaportes)+2; $i++) { 
+                            $this->excel->getActiveSheet()->setCellValue('A'.(string)$i,$pasaportes[$i-2]->id);
+                            $this->excel->getActiveSheet()->setCellValue('B'.(string)$i,$pasaportes[$i-2]->propietario);
+                            $this->excel->getActiveSheet()->setCellValue('C'.(string)$i,$pasaportes[$i-2]->vendedor);
+                            $hacienda_visitas = ($pasaportes[$i-2]->sauza == '1')?'Sauza ':'';
+                            $hacienda_visitas .= ($pasaportes[$i-2]->herradura == '1')?'Herradura ':'';
+                            $hacienda_visitas .= ($pasaportes[$i-2]->cofradia == '1')?'Cofradia':'';
+                            $this->excel->getActiveSheet()->setCellValue('D'.(string)$i,$hacienda_visitas);
+                            $this->excel->getActiveSheet()->setCellValue('E'.(string)$i,$pasaportes[$i-2]->fecha);
+                            $this->excel->getActiveSheet()->setCellValue('F'.(string)$i,$pasaportes[$i-2]->fecha_visita);
+                      }
+                      $filename = 'Reporte_ventas_'.date('Y-m-d h:i:sa').'.xls';
+                    } 
+                    else {
+                      redirect('inicio/index','refresh');
+                    }
+                    
+                } 
+                else {
+                    $pasaportes= $this->Config_pasaporte_m->reporte_ventas($tipos_rango[$rango2]);
+                    if (!empty($pasaportes)) {
+                      $ventas = true;
+                    } 
+                    else {
+                      redirect('inicio/index','refresh');
+                    }
+                }
+          } 
+          if ($ventas) {
+            $this->excel->getActiveSheet()->setTitle('Ventas');
+            $this->excel->getActiveSheet()->setCellValue('A1','ID pasaporte');
+            $this->excel->getActiveSheet()->setCellValue('B1','Propietario');
+            $this->excel->getActiveSheet()->setCellValue('C1','Fecha de compra');
+            $this->excel->getActiveSheet()->setCellValue('D1','Vendedor');
+            $this->excel->getActiveSheet()->setCellValue('E1','Haciendas visitadas');
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('E1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('E1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            // $this->excel->getActiveSheet()->getStyle('B')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+            for ($i=2; $i < count($pasaportes)+2; $i++) { 
+                  $this->excel->getActiveSheet()->setCellValue('A'.(string)$i,$pasaportes[$i-2]->id);
+                  $this->excel->getActiveSheet()->setCellValue('B'.(string)$i,$pasaportes[$i-2]->propietario);
+                  $this->excel->getActiveSheet()->setCellValue('C'.(string)$i,$pasaportes[$i-2]->fecha);
+                  $this->excel->getActiveSheet()->setCellValue('D'.(string)$i,$pasaportes[$i-2]->vendedor);
+                  $hacienda_visitas = ($pasaportes[$i-2]->sauza == '1')?'Sauza ':'';
+                  $hacienda_visitas .= ($pasaportes[$i-2]->herradura == '1')?'Herradura ':'';
+                  $hacienda_visitas .= ($pasaportes[$i-2]->cofradia == '1')?'Cofradia':'';
+                  $this->excel->getActiveSheet()->setCellValue('E'.(string)$i,$hacienda_visitas);
+            }
+            $filename = 'Reporte_ventas_'.date('Y-m-d h:i:sa').'.xls';
+          }
+        } 
+        else if ($rol == '2') {
+          $action = $this->input->get('action',true);
+          if ($action == 'venta') {
+            $id_hacienda = $this->Master_m->filas_condicion('usuarios',array(
+              'id'     => $this->session->userdata('id_usuario'),
+              'status' => '1' 
+            ));
+            if(!empty($id_hacienda)) {
+              $id_hacienda = $id_hacienda[0]->id_hacienda;
+              $nombre_hacienda = array(
+                '1' => 'Sauza',
+                '2' => 'Herradura',
+                '3' => 'Cofradia'
+              );
+            $pasaportes = $this->get_ha_('id_hacienda',$this->session->userdata('id_usuario'));
+            $this->excel->getActiveSheet()->setTitle('Ventas de hacienda - '.$nombre_hacienda[$id_hacienda]);
+            $this->excel->getActiveSheet()->setCellValue('A1','ID pasaporte');
+            $this->excel->getActiveSheet()->setCellValue('B1','Propietario');
+            $this->excel->getActiveSheet()->setCellValue('C1','Fecha de compra');
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setSize(12);
+            $this->excel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            // $this->excel->getActiveSheet()->getStyle('B')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+            for ($i=2; $i < count($pasaportes)+2; $i++) { 
+                  $this->excel->getActiveSheet()->setCellValue('A'.(string)$i,$pasaportes[$i-2]->id);
+                  $this->excel->getActiveSheet()->setCellValue('B'.(string)$i,$pasaportes[$i-2]->propietario);
+                  $this->excel->getActiveSheet()->setCellValue('C'.(string)$i,$pasaportes[$i-2]->fecha);
+                }
+                $filename = 'Reporte_ventas_'.date('Y-m-d h:i:sa').'.xls';
+            }
+            else {
+               redirect('inicio/index','refresh');
+            }
+          } 
+          else if ($action == 'visitas') {
+            $id_hacienda = $this->Master_m->filas_condicion('usuarios',array(
+              'id'     => $this->session->userdata('id_usuario'),
+              'status' => '1' 
+            ));
+            if(!empty($id_hacienda)) {
+              $id_hacienda = $id_hacienda[0]->id_hacienda;
+              $nombre_hacienda = array(
+                '1' => 'Sauza',
+                '2' => 'Herradura',
+                '3' => 'Cofradia'
+              );
+              $pasaportes = $this->Config_pasaporte_m->get_visita_propietario($id_hacienda);
+              if (!empty($pasaportes)) {
+                $this->excel->getActiveSheet()->setTitle('Visitas de hacienda - '.$nombre_hacienda[$id_hacienda]);
+                $this->excel->getActiveSheet()->setCellValue('A1','ID pasaporte');
+                $this->excel->getActiveSheet()->setCellValue('B1','Propietario');
+                $this->excel->getActiveSheet()->setCellValue('C1','Fecha de visita');
+                $this->excel->getActiveSheet()->setCellValue('D1','Fecha de compra');
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
+                $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setSize(12);
+                $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setSize(12);
+                $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setSize(12);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+                $this->excel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true);
+                $this->excel->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
+                $this->excel->getActiveSheet()->getStyle('D1')->getFont()->setBold(true);
+                $this->excel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('B')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                for ($i=2; $i < count($pasaportes)+2; $i++) { 
+                  $this->excel->getActiveSheet()->setCellValue('A'.(string)$i,$pasaportes[$i-2]->id_pasaporte_i);
+                  $this->excel->getActiveSheet()->setCellValue('B'.(string)$i,$pasaportes[$i-2]->propietario);
+                  $this->excel->getActiveSheet()->setCellValue('C'.(string)$i,$pasaportes[$i-2]->f_visita);
+                  $this->excel->getActiveSheet()->setCellValue('D'.(string)$i,$pasaportes[$i-2]->f_compra);
+                }
+                $filename = 'Reporte_visitas_'.date('Y-m-d h:i:sa').'.xls';
+              } 
+              else {
+                redirect('inicio/index','refresh');
+              }
+            }
+          }
+        }
+        header('Content-Type: application/vnd.ms-excel'); 
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); 
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+        $objWriter->save('php://output');
+      }
     }
 
     public function kit_() {
@@ -1297,7 +1577,9 @@ class Config_pasaportes extends CI_Controller {
 			$data['rol'] = $this->Inicio_m->get_rol($this->session->userdata('id_usuario'));
 			$data['avatar'] = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
 			$data['avatar'] = $data['avatar'][0]->avatar;
-			$data['header'] = $this->get_header();
+      $data['correo'] = $this->Master_m->filas_condicion('usuarios',array('id' => $this->session->userdata('id_usuario')));
+			$data['correo'] = $data['correo'][0]->correo;
+      $data['header'] = $this->get_header();
 			$data['menu_1'] = $this->Master_m->filas_condicion('menu_1',array('id_rol' => $data['rol'][0]->id_rol));
 			$data['id_rol'] = $data['rol'][0]->id;
             $data['rol'] = $data['rol'][0]->roles;

@@ -21,7 +21,7 @@
                         <i class="fa inline fa-caret-down"></i>
                         <i class="fa none fa-caret-up"></i>
                       </span>
-                      <small>pasaportetequilero1@gmail.com</small>
+                      <small><?php echo $correo; ?></small>
                     </a>
                   </div>
                   <div id="nav">
@@ -187,15 +187,23 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-sm-8" id="contain-options" data-id="rango_ventas"></div>
+                    <div class="col-sm-6" id="contain-options" data-id="rango_ventas"></div>
+                    <div class="col-sm-2" style="text-align:right;">
+                      <div class="col-sm-12">
+                        <a id="r_excel" data-rol="<?php echo $id_rol; ?>" href="<?php echo base_url('config_pasaportes/g_reporte?rol='.$id_rol); ?>">
+                          <button md-ink-ripple="" class="btn btn-fw btn-success waves-effect waves-effect waves-effect waves-effect">Excel</button>
+                        </a>
+                      </div>
+                    </div>
                   </div>
                   <div class="table-responsive">
                     <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="10">
                       <thead>
                         <tr>
+                          <th>ID</th>
                           <th>Propietario</th>
                           <th data-hide="phone,tablet">Fecha de compra</th>
-                          <th data-hide="phone,tablet">Estado</th>
+                          <!-- <th data-hide="phone,tablet">Estado</th> -->
                           <th data-hide="phone">Vendedor</th>
                           <th data-hide="phone">Haciendas visitadas</th>
                         </tr>
@@ -203,9 +211,10 @@
                       <tbody>
                       <?php foreach ($pasaportes as $value_p) { ?>
                         <tr>
+                          <td><?php echo $value_p->id?></td>
                           <td><?php echo $value_p->propietario?></td>
                           <td><?php echo $value_p->fecha?></td>
-                          <td><?php echo $value_p->tipo_pago?></td>
+                          <!-- <td><?php echo $value_p->tipo_pago?></td> -->
                           <td><?php echo $value_p->vendedor?></td>
                           <td>
                           <?php if ($value_p->tipo_pago == 'Pagado') { ?>
