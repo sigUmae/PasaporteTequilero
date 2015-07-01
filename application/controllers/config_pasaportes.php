@@ -842,14 +842,13 @@ class Config_pasaportes extends CI_Controller {
                         $this->load->view('config_pasaportes/reportes_ventas_a_v',$valid);
                         break;
                     case 2:
-                        $valid['ventas_'] = $this->get_ha_('id_hacienda',$this->session->userdata('id_usuario'));
+                        // $valid['ventas_'] = $this->get_ha_('id_hacienda',$this->session->userdata('id_usuario'));
+                        $valid['ventas_'] = $this->Master_m->filas_condicion('info_compra',array('status' => '1'));
                         $this->load->view('config_pasaportes/reporte_ventas_v',$valid);
                         break;
                     case 3:
                         $valid['ventas_'] = $this->get_ha_('id_aliado',$this->session->userdata('id_usuario'));
                         $this->load->view('config_pasaportes/reporte_ventas_v',$valid);
-                        // echo '<pre>';
-                        // print_r($valid);
                         break;
                 }
             }
